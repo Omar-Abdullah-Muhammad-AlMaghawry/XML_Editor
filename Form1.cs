@@ -51,5 +51,10 @@ namespace XML_editor
         {
 
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
