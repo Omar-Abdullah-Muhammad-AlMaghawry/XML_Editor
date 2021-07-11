@@ -55,6 +55,7 @@ namespace XML_editor
             // 
             // richTextBox1
             // 
+            this.richTextBox1.AcceptsTab = true;
             this.richTextBox1.Location = new System.Drawing.Point(604, 58);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
@@ -170,7 +171,7 @@ namespace XML_editor
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.richTextBox2);
             this.Name = "Form1";
-            this.Text = "XML Editor";
+            this.Text = "-";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
