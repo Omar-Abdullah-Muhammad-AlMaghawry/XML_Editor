@@ -10,11 +10,12 @@ namespace XML_editor
         private Queue<string> attr;
         private int index;
         private List<Node> children;
-        Node(string n) {
+        private string value;
+        public Node(string n) {
             name = n;
             index = 0;
         }
-        Node()
+        public Node()
         {
             index = 0;
         }
@@ -70,6 +71,14 @@ namespace XML_editor
         public int getCountCh()
         {
             return index + 1;
+        }
+        public void setValue(string input)
+        {
+            value = input;
+        }
+        public string getValue()
+        {
+            return value;
         }
     }
 }
