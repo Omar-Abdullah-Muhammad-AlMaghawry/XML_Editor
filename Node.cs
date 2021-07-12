@@ -11,15 +11,39 @@ namespace XML_editor
         private int index;
         private List<Node> children;
         private string value;
+        public Node()
+        {
+            name = "";
+            value = "";
+            attr = new Queue<string>();
+            children = new List<Node>();
+            index = 0;
+        }
         public Node(string n)
         {
             name = n;
+            value = "";
+            attr = new Queue<string>();
+            children = new List<Node>();
             index = 0;
         }
-        public Node()
+        public Node(string n, string v)
         {
+            name = n;
+            value = v;
+            attr = new Queue<string>();
+            children = new List<Node>();
             index = 0;
         }
+        public Node(string n,ref Queue<string> att,ref List<Node> ch, string v)
+        {
+            name = n;
+            attr = att;
+            children = ch;
+            value = v;
+            index = 0;
+        }
+        
         public void setName(string n)
         {
             name = n;
@@ -71,7 +95,7 @@ namespace XML_editor
         }
         public int getCountCh()
         {
-            return index + 1;
+            return children.Count;
         }
         public void setValue(string input)
         {

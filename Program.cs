@@ -18,6 +18,8 @@ namespace XML_editor
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+
+//            Console.Write(x.getJSON());
         }
     }
 }

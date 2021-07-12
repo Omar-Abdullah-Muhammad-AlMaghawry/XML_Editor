@@ -7,11 +7,13 @@ namespace XML_editor
     class Tree
     {
         private Node root;
-        private string json = "";
+        private string json ;
         private LinkedList<int> eq;
-        Tree(ref Node n)
+       public Tree(ref Node n)
         {
-            root = n;
+           root = n;
+            json = "";
+            eq = new LinkedList<int>();
         }
         public void insert() { }
         public void format() { }
@@ -19,7 +21,7 @@ namespace XML_editor
         {
             int i = 0;
             bool enter = false;
-            if (r.getCountCh() == 0)
+            if (r.getAllCh().Count == 0)
             {
                 json = json + "}\n";
                 return;
@@ -30,7 +32,8 @@ namespace XML_editor
                 json = json + "[" + "\n";
             }
             json = json + "{";
-            while (r.getAllAttr().Count != -1)
+            int cAttr = r.getAllAttr().Count;
+            while (cAttr != 0)
             {
                 enter = true;
                 if (i % 2 == 0)
@@ -38,6 +41,7 @@ namespace XML_editor
                 else
                     json = json + $"{r.getOneAttr()}";
                 i++;
+                cAttr--;
             }
             if (enter)
                 json = json + "\n" + "#text: " + $"\"{r.getValue() }\"";
@@ -64,6 +68,9 @@ namespace XML_editor
             }
             json = json + "}\n";
         } 
-
+public string getJSON()
+        {
+            return json;
+        }
     }
  }
