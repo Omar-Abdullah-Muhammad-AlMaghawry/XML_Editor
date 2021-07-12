@@ -97,6 +97,10 @@ namespace XML_editor
         {
             return children.Count;
         }
+        public int getCountaAttr()
+        {
+            return attr.Count;
+        }
         public void setValue(string input)
         {
             value = input;

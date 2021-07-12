@@ -40,20 +40,29 @@ namespace XML_editor
         private void button4_Click(object sender, EventArgs e)
         {
 
-            LinkedList<int> er = new LinkedList<int>();
-
+           // LinkedList<int> er = new LinkedList<int>();
+            Queue<int> er = new Queue<int>();
+            List<int> r = new List<int>();
             Queue<string> q = new Queue<string>();
             q.Enqueue("ref");
             q.Enqueue("hhtttp **");
+            Queue<string> q1 = new Queue<string>();
+            q1.Enqueue("ref");
+            q1.Enqueue("hhtttp **");
+            List<Node> l1 = new List<Node>();
+            l1.Add(new Node("n3", "mmmmmmmmmmmmmm"));
+            Node v = new Node("n4", ref q1, ref l1, "dddddddvvvvvvvvvvvvvv");
             List<Node> l = new List<Node>();
+           
             l.Add(new Node("n1","gvflgklflkg"));
             l.Add(new Node("n2", "ooooooooooooooo"));
             l.Add(new Node("n1", "ddddddddddddddd"));
             l.Add(new Node("n3", "mmmmmmmmmmmmmm"));
+            l.Add(v);
             Node n = new Node("span",ref q,ref l, "llllllllllllllllll");
             Tree x = new Tree(ref n);
-            x.conv2Json(ref n, ref er, -1);
-            richTextBox2.Text = x.getJSON();
+            x.conv2Json(ref n, ref er, ref r,-1,false);
+            richTextBox1.Text = x.getJSON();
         }
 
         private void button3_Click(object sender, EventArgs e)
