@@ -65,9 +65,9 @@ namespace XML_editor
         {
             return attr;
         }
-        public List<Node> getAllCh()
+        public ref List<Node> getAllCh()
         {
-            return children;
+            return ref children;
         }
         public int getCountCh()
         {
