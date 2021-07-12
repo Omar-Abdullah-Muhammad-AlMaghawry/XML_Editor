@@ -21,7 +21,7 @@ namespace XML_editor
         }
         public void setName(string n)
         {
-            name = n;
+            name = n ;
         }
         public void setOneAttr(string q)
         {
