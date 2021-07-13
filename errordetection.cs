@@ -78,33 +78,5 @@ namespace error
                 Console.WriteLine("no error");
             Console.Read();
         }
-
-        static void Main(string[] args)
-        {
-            string sstring = @"<?xml version=1.0 encoding=UTF-8?>
-<element />
-<users>
-<user>
-<id>1</id>
-<element />
-<name>user1</name>
-<posts>
-<post>
-</post>
-<post>
-</post>
-</posts>
-<followers>
-<follower>
-<name>2</name>
-</follower>
-<follower>
-<id>4</id>
-</follower>
-</followers>
-</user>
-</users>";
-            errordetection(sstring);
-        }
     }
 }
