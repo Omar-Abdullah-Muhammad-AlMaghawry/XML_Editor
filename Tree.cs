@@ -9,8 +9,6 @@ namespace XML_editor
         private Node root; 
         private string json;
         private LinkedList<int> eq;
-        private string prolog = "";
-        private string startingComment = "";
         private List<string> startingTags = new List<string>();
         public Tree(ref Node n)
         {
@@ -24,54 +22,6 @@ namespace XML_editor
             List<char> temp = new List<char>();
             string tempStr;
             int index = 0;
-            //if (inputText.Length >= 5) {
-            //    if(inputText.Substring(1, 4) == "?xml")
-            //    {
-            //        while(inputText[index] != '>')
-            //        {
-            //            temp.Add(inputText[index]);
-            //            if (index < inputText.Length - 1) index++; else break;
-            //        }
-            //        temp.Add(inputText[index]);
-            //        tempStr = new string(temp.ToArray());
-            //        prolog = tempStr;
-            //        temp.Clear();
-            //        if (index < inputText.Length - 1) index++;
-            //        while (inputText[index] == ' ' || inputText[index] == '\n' || inputText[index] == '\t')
-            //            if (index < inputText.Length - 1) index++; else break;
-            //    }
-            //    else if (inputText.Length >= 4)
-            //        if (inputText.Substring(1, 3) == "!--")
-            //            {
-            //                while (inputText[index] != '>')
-            //                {
-            //                    temp.Add(inputText[index]);
-            //                    if (index < inputText.Length - 1) index++; else break;
-            //                }
-            //                temp.Add(inputText[index]);
-            //                tempStr = new string(temp.ToArray());
-            //                startingComment = tempStr;
-            //                temp.Clear();
-            //                if (index < inputText.Length - 1) index++;
-            //                while (inputText[index] == ' ' || inputText[index] == '\n' || inputText[index] == '\t')
-            //                    if (index < inputText.Length - 1) index++; else break;
-            //                if (inputText.Substring(index + 1, 4) == "?xml")
-            //                {
-            //                    while (inputText[index] != '>')
-            //                    {
-            //                        temp.Add(inputText[index]);
-            //                        if (index < inputText.Length - 1) index++; else break;
-            //                    }
-            //                    temp.Add(inputText[index]);
-            //                    tempStr = new string(temp.ToArray());
-            //                    prolog = tempStr;
-            //                    temp.Clear();
-            //                    if (index < inputText.Length - 1) index++;
-            //                    while (inputText[index] == ' ' || inputText[index] == '\n' || inputText[index] == '\t')
-            //                        if (index < inputText.Length - 1) index++; else break;
-            //                }
-            //            }
-            //}
             while (true)
             {
                 if (inputText.Length >= index + 4)
@@ -231,13 +181,9 @@ namespace XML_editor
             }
             return currentNode;
         }
-        public string getProlog()
+        public List<string> getStartingTags()
         {
-            return prolog;
-        }
-        public string getStartingComment()
-        {
-            return startingComment;
+            return startingTags;
         }
         public void insert() { }
         public void format() { }
