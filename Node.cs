@@ -11,6 +11,7 @@ namespace XML_editor
         private int index;
         private List<Node> children;
         private string value;
+        private bool isOneLine = false;
         public Node()
         {
             name = "";
@@ -43,7 +44,14 @@ namespace XML_editor
             value = v;
             index = 0;
         }
-        
+        public void setOneLine(bool inp)
+        {
+            isOneLine = inp;
+        }
+        public bool getOneLine()
+        {
+            return isOneLine;
+        }
         public void setName(string n)
         {
             name = n ;
@@ -52,10 +60,11 @@ namespace XML_editor
         {
             attr.Enqueue(q);
         }
-        public void setchild(ref Node c)
+        public void setchild(Node c)
         {
-            children[index] = c;
-            index++;
+            //children[index] = c;
+            //index++;
+            children.Add(c);
         }
         public string getName()
         {
