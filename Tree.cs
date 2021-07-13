@@ -8,22 +8,62 @@ namespace XML_editor
     {
         private Node root;
         private string json ;
+        private List<int> temp;
         
        public Tree(ref Node n)
         {
            root = n;
             json = "";
-            
+            temp = new List<int>();
         }
         public void insert() { }
         public void format() { }
-        public void conv2Json(ref Node r, ref Queue<int> e,ref List<int> repeat, int ind,bool equal)
+        public int getDepth(ref Node r)
+        {
+            if (r.getCountCh() == 0)
+                return 0;
+            List<int> d= new List<int>();
+            for (int i =0;i<r.getCountCh();i++)
+            {
+                Node x = r.getAllCh()[i];
+                d.Add(getDepth(ref x));
+            }
+            d.Sort();
+            return d[d.Count - 1]+1;
+        }
+        public int getDepthNode(ref Node r, ref Node n)
+        {
+            if (r==null)
+                return -1;
+            int c = -1;
+            for (int i = 0; i <= r.getCountCh(); i++)
+            {
+                Node x;
+                if (i==r.getCountCh())
+                {
+                   
+                    x = null;
+
+                }
+                else
+                x= r.getAllCh()[i];
+
+                if (r == n || (c = getDepthNode(ref x, ref n)) >= 0)
+                    return c+1;
+            }
+           
+            return c;
+        }
+
+        public void conv2Json(ref Node r, ref Queue<int> e,List<int> repeat, int ind,bool equal, int depth)
         {
             //    Queue<int> eq;
             //     eq = new Queue<int>();
             //List<int> repeat = new List<int>();
-            int i = 0;
+            int i = 0; 
             bool enter = false;
+          //  depth = (r.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref r) : getDepth(ref root) - getDepth(ref r) + 1;
+            depth = getDepthNode(ref root, ref r);
             for (int j = 0; j < r.getCountCh(); j++)
                 for (int v = 0; v < r.getCountCh(); v++)
                 {
@@ -35,58 +75,91 @@ namespace XML_editor
 
                     }
                 }
-            if (!repeat.Contains(ind)||ind == repeat[0])
-            json = json + $"{r.getName()}: ";
-            
+            if (!repeat.Contains(ind) || ind == repeat[0])
+            { for (int t = 0; t < depth; t++)
+                    json = json + "\t";
+                json = json + $"{r.getName()}: ";
+            }
             if (e.Count != 0  && ind == repeat[0])
             {
                 json = json + "[" + "\n";
             }
-            
+            for (int t = 0; t < depth; t++)
+                json = json + "\t";
             json = json + "{";
             int cAttr = r.getAllAttr().Count;
             while (cAttr != 0)
             {
+
                 enter = true;
+
                 if (i % 2 == 0)
-                    json = json + "\n" + $"@{r.getOneAttr()}: ";
+
+                {
+                    json = json + "\n";
+                    for (int t = 0; t < depth; t++)
+                        json = json + "\t";
+                    json = json + $"@{r.getOneAttr()}: ";
+                }
                 else
                     json = json + $"{r.getOneAttr()}";
                 i++;
                 cAttr--;
             }
             if (enter)
-                json = json + "\n" + "#text: " + $"\"{r.getValue() }\""+"\n";
+            {
+                json = json + "\n";
+                for (int t = 0; t < depth; t++)
+                    json = json + "\t";
+
+                json = json + "#text: " + $"\"{r.getValue() }\"" + "\n";
+                for (int t = 0; t < depth; t++)
+                    json = json + "\t";
+
+            }
             else
-                json = json + "\n" + $"\"{r.getValue() }\""+"\n";
-         
+            {
+                json = json + "\n";
+                for (int t = 0; t < depth; t++)
+                    json = json + "\t";
+                json = json + $"\"{r.getValue() }\"" + "\n";
+                for (int t = 0; t < depth; t++)
+                    json = json + "\t";
+
+            }
             if (e.Count != 0  && e.Contains(ind))
             {
                 if (repeat[repeat.Count - 1] != e.Peek())
                 {
-                    json = json + "},";
+                    json = json + "},\n";
                     e.Dequeue();
-                   // return;
+                    return;
                 }
                 else
                 {
-                    json = json + "\n}]"+"\n";
+                    json = json + "}\n";
+                    for (int t = 0; t < depth; t++)
+                        json = json + "\t";
+                    json = json + "]"+"\n";
                     e.Dequeue();
                 
-                    //   return;
+                     return;
                 }
             }
            
-           
+
             if (r.getCountCh() == 0)
             {
-                json = json + "\n}";
+                json = json + "}\n";
                 return;
             }
            
 
             for (int j = 0; j < r.getCountCh(); j++)
             {
+
+                if(temp.Count>=1)
+                repeat = temp;
                 if (repeat.Contains(j))
                     continue;
                 // Node y = r.getAllCh()[e.Peek()];
@@ -94,9 +167,11 @@ namespace XML_editor
                 Node x ;
                 bool what;
                 int inde;
+                
                 if ((e.Count != 0)) {
                      x = r.getAllCh()[e.Peek()];
-                     what = true;
+                    
+                    what = true;
                      inde = e.Peek();
                     if (!equal)
                     {
@@ -104,14 +179,23 @@ namespace XML_editor
                     }
                 }
                 else {
-                     x = r.getAllCh()[j];
-                     what = false;
+                  
+                        x = r.getAllCh()[j];
+                  
+                    if (x.getCountCh() >= 1)
+                    {
+                        temp = repeat;
+                        repeat = new List<int>();
+                    }
+                    what = false;
                      inde = j;
                 }
-                    conv2Json(ref x, ref e, ref repeat,inde, what);
-                
+            //   if(getDepth(ref x)==0&& r.getCountCh() >= 1)
+              //  depth =  getDepth(ref root) - getDepth(ref r) + 1 ;
+                conv2Json(ref x, ref e,repeat,inde, what,depth);
             }
             json = json + "}\n";
+
         } 
 public string getJSON()
         {

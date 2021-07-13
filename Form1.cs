@@ -56,12 +56,15 @@ namespace XML_editor
            
             l.Add(new Node("n1","gvflgklflkg"));
             l.Add(new Node("n2", "ooooooooooooooo"));
+            l.Add(v);
             l.Add(new Node("n1", "ddddddddddddddd"));
             l.Add(new Node("n3", "mmmmmmmmmmmmmm"));
-            l.Add(v);
+
+            l.Add(new Node("n1", "mmmmmmmmmmmmmmxxxxxxxxxxxxxxxxxx"));
+          
             Node n = new Node("span",ref q,ref l, "llllllllllllllllll");
             Tree x = new Tree(ref n);
-            x.conv2Json(ref n, ref er, ref r,-1,false);
+            x.conv2Json(ref n, ref er, r,-1,false,0);
             richTextBox1.Text = x.getJSON();
         }
 
