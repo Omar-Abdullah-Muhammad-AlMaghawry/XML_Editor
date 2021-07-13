@@ -65,7 +65,7 @@ namespace XML_editor
             bool enter = false;
      //       depTemp = depth;          
         //    depth = (r.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref r) : getDepth(ref root) - getDepth(ref r) + 1;
-          depth = getDepthNode(ref root, ref r);
+        //  depth = getDepthNode(ref root, ref r);
             for (int j = 0; j < r.getCountCh(); j++)
                 for (int v = 0; v < r.getCountCh(); v++)
                 {
@@ -80,11 +80,14 @@ namespace XML_editor
             if (!repeat.Contains(ind) || ind == repeat[0])
             { for (int t = 0; t < depth; t++)
                     json = json + "\t";
-                json = json + $"{r.getName()}: ";
+                json = json + $"{r.getName()}: "+"\n";
             }
             if (e.Count != 0  && ind == repeat[0])
             {
-                json = json + "[" + "\n";
+                
+                for (int t = 0; t < depth; t++)
+                    json = json + "\t";
+                json = json + "["+"\n";
             }
             for (int t = 0; t < depth; t++)
                 json = json + "\t";
@@ -193,15 +196,19 @@ namespace XML_editor
                     what = false;
                      inde = j;
                 }
-                /*if(j+1 <r.getAllCh().Count)
-                     Node right=  r.getAllCh()[j + 1];
+/*                Node right;
+                Node left;
+                if (j+1 <r.getAllCh().Count)
+                     right=  r.getAllCh()[j + 1];
                 if (j - 1 > 0)
-                    Node left = r.getAllCh()[j - 1];*/
-                    //   if(getDepth(ref x)==0&& r.getCountCh() >= 1)
-   //            if (j - 1 > 0&& j + 1 < r.getAllCh().Count&&(getDepth(ref x)== getDepth(ref right)) || getDepth(ref x) == getDepth(ref left))
-                 //   depTemp = depth ;
+                    left = r.getAllCh()[j - 1];
+   */                 //   if(getDepth(ref x)==0&& r.getCountCh() >= 1)
+        //       if (j - 1 > 0&& j + 1 < r.getAllCh().Count&&(getDepth(ref x)== getDepth(ref right) || getDepth(ref x) == getDepth(ref left)))
+              if(x.getCountCh() >= 1)
+                depTemp = depth ;
                 // depTemp = getDepth(ref root) - getDepth(ref x);
-               // depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x)  :  depTemp + 1;
+               depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x)  :  depTemp + 1;
+          
                 conv2Json(ref x, ref e,repeat,inde, what,depth);
             }
             json = json + "}\n";
