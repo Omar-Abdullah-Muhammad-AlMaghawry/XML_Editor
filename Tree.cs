@@ -6,9 +6,15 @@ namespace XML_editor
 {
     class Tree
     {
-        private Node root;
-        public Tree(string inputXML)
+        private Node root; 
+        private string json;
+        private LinkedList<int> eq;
+        private string prolog = "";
+        public Tree(ref Node n)
         {
+            root = n;
+            json = "";
+            eq = new LinkedList<int>();
             //List<char> temp = new List<char>();
             //bool inTag = false;
             //bool inValue = false;
@@ -30,29 +36,136 @@ namespace XML_editor
             //    }
             //}
         }
-        private Node parseNode(ref string inputXML, int currentIndex)
+        public Tree(ref Node n, string inputText)
+        {
+            int index = 0;
+            if (inputText.Length >= 2) {
+                if(inputText.Substring(1, 4) == "?xml")
+                {
+                    List<char> temp = new List<char>();
+                    string tempStr;
+                    while(inputText[index] != '\n')
+                    {
+                        temp.Add(inputText[index]);
+                        if (index < inputText.Length - 1) index++; else break;
+                    }
+                    tempStr = new string(temp.ToArray());
+                    prolog = tempStr;
+                    if (index < inputText.Length - 1) index++;
+                }
+            }
+            root = parseNode(inputText, ref index);
+            n = root;
+        }
+        private Node parseNode(string inputXML, ref int currentIndex)
         {
             Node currentNode = new Node();
             List<char> temp = new List<char>();
+            string tempStr;
             while (currentIndex < inputXML.Length)
             {
                 if (inputXML[currentIndex] == '<')
                 {
-                    currentIndex++;
+                    if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
                     if (inputXML[currentIndex] != '/')
                     {
-                        currentIndex++;
+                        //if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
                         while (inputXML[currentIndex] != ' ' && inputXML[currentIndex] != '>')
                         {
+                            //Read tag name
                             temp.Add(inputXML[currentIndex]);
-                            currentIndex++;
+                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
                         }
-                        currentNode.setName(temp.ToString());
+                        tempStr = new string(temp.ToArray());
+                        currentNode.setName(tempStr);
+                        temp.Clear();
+
                         //continue parsing the tag for attributes, values, and other tags (children)
+                        while (inputXML[currentIndex] != '/' && inputXML[currentIndex] != '>')
+                        {
+                            //Read tag attribute value
+                            while (inputXML[currentIndex] != '=')
+                            {
+                                if (inputXML[currentIndex] == ' ')
+                                {
+                                    if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                                    continue;
+                                }
+                                temp.Add(inputXML[currentIndex]);
+                                if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                            }
+                            tempStr = new string(temp.ToArray());
+                            currentNode.setOneAttr(tempStr);
+                            temp.Clear();
+                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                            while (inputXML[currentIndex] != ' ')
+                            {
+                                //Read tag attribute value
+                                temp.Add(inputXML[currentIndex]);
+                                if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                            }
+                            tempStr = new string(temp.ToArray());
+                            currentNode.setOneAttr(tempStr);
+                            temp.Clear();
+                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                        }
+
+                        //The case of self-closing tags
+                        if(inputXML[currentIndex] == '/')
+                        {
+                            currentNode.setOneLine(true);
+                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                            while (inputXML[currentIndex] == ' ' || inputXML[currentIndex] == '\n' || inputXML[currentIndex] == '\t')
+                                if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                            return currentNode;
+                        }
+
+                        //Skip whitespace
+                        if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                        while(inputXML[currentIndex] == ' ' || inputXML[currentIndex] == '\n' || inputXML[currentIndex] == '\t')
+                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                        //Value or child tag?
+                        if(inputXML[currentIndex] != '<')
+                        {
+                            //In case of value
+                            while (inputXML[currentIndex] != '<' && inputXML[currentIndex] != '\n')
+                            {
+                                temp.Add(inputXML[currentIndex]);
+                                if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                            }
+                            tempStr = new string(temp.ToArray());
+                            currentNode.setValue(tempStr);
+                            temp.Clear();
+                        }
+                        else
+                        {
+                            //In case of tag
+                            if (currentIndex + 1 < inputXML.Length) 
+                                while (inputXML[currentIndex + 1] != '/')
+                                {
+                                    currentNode.setchild(parseNode(inputXML,ref currentIndex));
+                                    if (!(currentIndex + 1 < inputXML.Length)) break;
+                                }
+                                //else
+                                //{
+                                //return currentNode;
+                                //}
+                        }
+                        while(inputXML[currentIndex] != '>')
+                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                        if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                        while (inputXML[currentIndex] == ' ' || inputXML[currentIndex] == '\n' || inputXML[currentIndex] == '\t')
+                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
                     }
                 }
+                return currentNode;
             }
             return currentNode;
+        }
+        public string getProlog()
+        {
+            return prolog;
         }
         public void insert() { }
         public void format() { }

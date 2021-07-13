@@ -19,7 +19,8 @@ namespace XML_editor
 
         private void richTextBox2_TextChanged(object sender, EventArgs e)
         {
-
+            Node root = new Node();
+            Tree tree = new Tree(ref root, richTextBox2.Text);
         }
 
         private void label1_Click(object sender, EventArgs e)
