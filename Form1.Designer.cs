@@ -62,6 +62,7 @@ namespace XML_editor
             this.richTextBox1.Size = new System.Drawing.Size(573, 576);
             this.richTextBox1.TabIndex = 3;
             this.richTextBox1.Text = "";
+            this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // label1
             // 
@@ -80,9 +81,9 @@ namespace XML_editor
             this.label2.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label2.Location = new System.Drawing.Point(874, 15);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(108, 25);
+            this.label2.Size = new System.Drawing.Size(76, 25);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Output file";
+            this.label2.Text = "Output";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // button1

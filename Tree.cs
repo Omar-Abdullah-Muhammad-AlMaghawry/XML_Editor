@@ -23,7 +23,7 @@ namespace XML_editor
             List<char> temp = new List<char>();
             string tempStr;
             int index = 0;
-            if (inputText.Length >= 2) {
+            if (inputText.Length >= 5) {
                 if(inputText.Substring(1, 4) == "?xml")
                 {
                     while(inputText[index] != '>')
@@ -39,36 +39,37 @@ namespace XML_editor
                     while (inputText[index] == ' ' || inputText[index] == '\n' || inputText[index] == '\t')
                         if (index < inputText.Length - 1) index++; else break;
                 }
-                else if (inputText.Substring(1, 3) == "!--")
-                {
-                    while (inputText[index] != '>')
-                    {
-                        temp.Add(inputText[index]);
-                        if (index < inputText.Length - 1) index++; else break;
-                    }
-                    temp.Add(inputText[index]);
-                    tempStr = new string(temp.ToArray());
-                    startingComment = tempStr;
-                    temp.Clear();
-                    if (index < inputText.Length - 1) index++;
-                    while (inputText[index] == ' ' || inputText[index] == '\n' || inputText[index] == '\t')
-                        if (index < inputText.Length - 1) index++; else break;
-                    if (inputText.Substring(index + 1, 4) == "?xml")
-                    {
-                        while (inputText[index] != '>')
+                else if (inputText.Length >= 4)
+                    if (inputText.Substring(1, 3) == "!--")
                         {
+                            while (inputText[index] != '>')
+                            {
+                                temp.Add(inputText[index]);
+                                if (index < inputText.Length - 1) index++; else break;
+                            }
                             temp.Add(inputText[index]);
-                            if (index < inputText.Length - 1) index++; else break;
+                            tempStr = new string(temp.ToArray());
+                            startingComment = tempStr;
+                            temp.Clear();
+                            if (index < inputText.Length - 1) index++;
+                            while (inputText[index] == ' ' || inputText[index] == '\n' || inputText[index] == '\t')
+                                if (index < inputText.Length - 1) index++; else break;
+                            if (inputText.Substring(index + 1, 4) == "?xml")
+                            {
+                                while (inputText[index] != '>')
+                                {
+                                    temp.Add(inputText[index]);
+                                    if (index < inputText.Length - 1) index++; else break;
+                                }
+                                temp.Add(inputText[index]);
+                                tempStr = new string(temp.ToArray());
+                                prolog = tempStr;
+                                temp.Clear();
+                                if (index < inputText.Length - 1) index++;
+                                while (inputText[index] == ' ' || inputText[index] == '\n' || inputText[index] == '\t')
+                                    if (index < inputText.Length - 1) index++; else break;
+                            }
                         }
-                        temp.Add(inputText[index]);
-                        tempStr = new string(temp.ToArray());
-                        prolog = tempStr;
-                        temp.Clear();
-                        if (index < inputText.Length - 1) index++;
-                        while (inputText[index] == ' ' || inputText[index] == '\n' || inputText[index] == '\t')
-                            if (index < inputText.Length - 1) index++; else break;
-                    }
-                }
             }
             root = parseNode(inputText, ref index);
             n = root;
@@ -114,6 +115,7 @@ namespace XML_editor
                                 while (inputXML[currentIndex] == ' ' || inputXML[currentIndex] == '\n' || inputXML[currentIndex] == '\t')
                                     if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
 
+                                currentNode.setOneLine(true);
                                 return currentNode;
                             }
 
