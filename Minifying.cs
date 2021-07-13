@@ -1,10 +1,11 @@
-
-      public void Mini(Node k)
+ 
+public void Mini(Node k)
       {
         
-          
-          Console.Write( "<"+k.getName());
-         // +" "+k.getOneAttr()+">");//getting all atter.
+          if(k.getName()!="!--")
+          {
+             Console.Write( "<"+k.getName());
+         
 
           if(k.getCountAttr()!=0)
           {
@@ -28,6 +29,8 @@
 
           
           Console.Write("</"+k.getName()+">");
+          }
+        
            
             
    
