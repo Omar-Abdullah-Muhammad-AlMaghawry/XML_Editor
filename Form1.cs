@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using System.Text;
 
 namespace XML_editor
 {
@@ -160,6 +162,35 @@ namespace XML_editor
                 return false;
             }
             //Console.Read();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string path = "";
+            OpenFileDialog fdlg = new OpenFileDialog();
+            fdlg.Title = "Choose the XML File";
+            //      fdlg.InitialDirectory = @"d:\College\3rd Comp. and Sys\2nd Terms\Data Structure\XML_Editor_Project\data";
+            fdlg.InitialDirectory = @"c:\";
+            fdlg.Filter = "All files (*.*)|*.*|XML files (*.xml*)|*.xml*";
+            fdlg.FilterIndex = 2;
+            fdlg.RestoreDirectory = true;
+            if (fdlg.ShowDialog() == DialogResult.OK)
+            {
+                path = fdlg.FileName;
+            }
+            using (FileStream xml = File.Open(path, FileMode.Open))
+            {
+                string data;
+                byte[] b = new byte[xml.Length];
+                UTF8Encoding temp = new UTF8Encoding(true);
+                while (xml.Read(b, 0, b.Length) > 0)
+                    richTextBox2.Text = temp.GetString(b);
+                /*       Queue<int> er = new Queue<int>();
+                       List<int> r = new List<int>();
+                       tree.conv2Json(ref root, ref er, r, -1, false, 0);
+                       richTextBox1.Text = tree.getJSON();*/
+
+            }
         }
     }
 }
