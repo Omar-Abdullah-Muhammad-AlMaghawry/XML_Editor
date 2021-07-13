@@ -376,41 +376,34 @@ namespace XML_editor
                 {
                     x = r.getAllCh()[e.Peek()];
                    
-                        what = true;
+                    what = true;
                     inde = e.Peek();
                     if (!equal)
                     {
                         j--;
                     }
-                    if ( x.getCountCh() > 0)
-                    {
-                        if (x.getCountCh() >= 1)
-                            depTemp = depth;
-                        // depTemp = getDepth(ref root) - getDepth(ref x);
-                        depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
-                        conv2Json(ref x, ref e, ref repeat, inde, what, depth, ref json);
-                        for (int v = 0; v < x.getCountCh(); v++)
-                        {
-                           
-                            if (v != 0 && repeat.Contains(v))
-                                continue;
-                            s = x.getAllCh()[v];
-                            if (s.getCountCh() >= 1)
-                            {
-                                tempRe = repeat;
-                                repeat = new List<int>();
-                            
-                            }
+                }
+               else if ((e.Count != 0) && r.getCountCh() > 0)
+                {
+                    // depTemp = getDepth(ref root) - getDepth(ref x);
+                  
+                        x = r.getAllCh()[j];
+                        inde = j;
+                        what = false;
+                    //if (s.getCountCh() >= 1)
+                    //{
+                    //    tempRe = repeat;
+                    //    repeat = new List<int>();
 
-                            if (s.getCountCh() >= 1)
-                                depTemp = depth;
-                            what = false;
-                            // depTemp = getDepth(ref root) - getDepth(ref x);
-                            depth = (s.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
-                            inde = v;
-                            conv2Json(ref s, ref e, ref repeat, inde, what, depth, ref json);
-                        }
-                    }
+                    //}
+
+                    //if (s.getCountCh() >= 1)
+                    //    depTemp = depth;
+
+                    // depTemp = getDepth(ref root) - getDepth(ref x);
+                    //depth = (s.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
+
+                    //conv2Json(ref s, ref e, ref repeat, inde, what, depth, ref json);
                 }
                 else
                 {

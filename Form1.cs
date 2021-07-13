@@ -99,7 +99,8 @@ namespace XML_editor
             string path = "";
             OpenFileDialog fdlg = new OpenFileDialog();
             fdlg.Title = "Choose the XML File";
-            fdlg.InitialDirectory = @"d:\College\3rd Comp. and Sys\2nd Terms\Data Structure\XML_Editor_Project\data";
+            //      fdlg.InitialDirectory = @"d:\College\3rd Comp. and Sys\2nd Terms\Data Structure\XML_Editor_Project\data";
+            fdlg.InitialDirectory = @"c:\";
             fdlg.Filter = "All files (*.*)|*.*|All files (*.*)|*.*";
             fdlg.FilterIndex = 2;
             fdlg.RestoreDirectory = true;
