@@ -15,26 +15,7 @@ namespace XML_editor
             root = n;
             json = "";
             eq = new LinkedList<int>();
-            //List<char> temp = new List<char>();
-            //bool inTag = false;
-            //bool inValue = false;
-            //for (int i = 0; i < inputXML.Length; i++)
-            //{
-            //    if (inputXML[i] == '<')
-            //    {
-            //        i++;
-            //        if (inputXML[i] != '/')
-            //        {
-            //            i++;
-            //            while (inputXML[i] != ' ' && inputXML[i] != '>')
-            //            {
-            //                temp.Add(inputXML[i]);
-            //                i++;
-            //            }
-            //            add to a node
-            //        }
-            //    }
-            //}
+            
         }
         public Tree(ref Node n, string inputText)
         {
@@ -44,13 +25,14 @@ namespace XML_editor
                 {
                     List<char> temp = new List<char>();
                     string tempStr;
-                    while(inputText[index] != '\n')
+                    while(inputText[index] != '>')
                     {
                         temp.Add(inputText[index]);
                         if (index < inputText.Length - 1) index++; else break;
                     }
                     tempStr = new string(temp.ToArray());
                     prolog = tempStr;
+                    if (index < inputText.Length - 1) index++;
                     if (index < inputText.Length - 1) index++;
                 }
             }
@@ -69,7 +51,8 @@ namespace XML_editor
                     if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
                     if (inputXML[currentIndex] != '/')
                     {
-                        //if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                        //Detect name
+                        //TODO ignore comments (comment can be a tag too?)
                         while (inputXML[currentIndex] != ' ' && inputXML[currentIndex] != '>')
                         {
                             //Read tag name
@@ -83,7 +66,7 @@ namespace XML_editor
                         //continue parsing the tag for attributes, values, and other tags (children)
                         while (inputXML[currentIndex] != '/' && inputXML[currentIndex] != '>')
                         {
-                            //Read tag attribute value
+                            //Read tag attribute name
                             while (inputXML[currentIndex] != '=')
                             {
                                 if (inputXML[currentIndex] == ' ')
@@ -98,7 +81,7 @@ namespace XML_editor
                             currentNode.setOneAttr(tempStr);
                             temp.Clear();
                             if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
-                            while (inputXML[currentIndex] != ' ')
+                            while (inputXML[currentIndex] != ' ' && inputXML[currentIndex] != '>' && inputXML[currentIndex] != '/')
                             {
                                 //Read tag attribute value
                                 temp.Add(inputXML[currentIndex]);
@@ -107,7 +90,9 @@ namespace XML_editor
                             tempStr = new string(temp.ToArray());
                             currentNode.setOneAttr(tempStr);
                             temp.Clear();
-                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                            //Skip whitespace
+                            while (inputXML[currentIndex] == ' ' || inputXML[currentIndex] == '\n' || inputXML[currentIndex] == '\t')
+                                if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
                         }
 
                         //The case of self-closing tags
