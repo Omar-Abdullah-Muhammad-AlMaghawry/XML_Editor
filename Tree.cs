@@ -8,13 +8,16 @@ namespace XML_editor
     {
         private Node root;
         private string json ;
-        private List<int> temp;
-        
+        private List<int> tempRe;
+        int depTemp;
+
+
        public Tree(ref Node n)
         {
            root = n;
             json = "";
-            temp = new List<int>();
+            tempRe = new List<int>();
+            depTemp = 0;
         }
         public void insert() { }
         public void format() { }
@@ -34,24 +37,22 @@ namespace XML_editor
         public int getDepthNode(ref Node r, ref Node n)
         {
             if (r==null)
-                return -1;
+                return 0;
+            
             int c = -1;
-            for (int i = 0; i <= r.getCountCh(); i++)
+            int i;
+            Node x;
+            for ( i = 0; i < r.getCountCh(); i++)
             {
-                Node x;
-                if (i==r.getCountCh())
-                {
-                   
-                    x = null;
-
-                }
-                else
+               
+         
                 x= r.getAllCh()[i];
 
                 if (r == n || (c = getDepthNode(ref x, ref n)) >= 0)
                     return c+1;
             }
-           
+
+          
             return c;
         }
 
@@ -62,8 +63,9 @@ namespace XML_editor
             //List<int> repeat = new List<int>();
             int i = 0; 
             bool enter = false;
-          //  depth = (r.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref r) : getDepth(ref root) - getDepth(ref r) + 1;
-            depth = getDepthNode(ref root, ref r);
+     //       depTemp = depth;          
+        //    depth = (r.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref r) : getDepth(ref root) - getDepth(ref r) + 1;
+          depth = getDepthNode(ref root, ref r);
             for (int j = 0; j < r.getCountCh(); j++)
                 for (int v = 0; v < r.getCountCh(); v++)
                 {
@@ -157,9 +159,8 @@ namespace XML_editor
 
             for (int j = 0; j < r.getCountCh(); j++)
             {
-
-                if(temp.Count>=1)
-                repeat = temp;
+                if(tempRe.Count>=1)
+                repeat = tempRe;
                 if (repeat.Contains(j))
                     continue;
                 // Node y = r.getAllCh()[e.Peek()];
@@ -184,14 +185,23 @@ namespace XML_editor
                   
                     if (x.getCountCh() >= 1)
                     {
-                        temp = repeat;
+                        tempRe = repeat;
                         repeat = new List<int>();
+                       
                     }
+                    
                     what = false;
                      inde = j;
                 }
-            //   if(getDepth(ref x)==0&& r.getCountCh() >= 1)
-              //  depth =  getDepth(ref root) - getDepth(ref r) + 1 ;
+                /*if(j+1 <r.getAllCh().Count)
+                     Node right=  r.getAllCh()[j + 1];
+                if (j - 1 > 0)
+                    Node left = r.getAllCh()[j - 1];*/
+                    //   if(getDepth(ref x)==0&& r.getCountCh() >= 1)
+   //            if (j - 1 > 0&& j + 1 < r.getAllCh().Count&&(getDepth(ref x)== getDepth(ref right)) || getDepth(ref x) == getDepth(ref left))
+                 //   depTemp = depth ;
+                // depTemp = getDepth(ref root) - getDepth(ref x);
+               // depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x)  :  depTemp + 1;
                 conv2Json(ref x, ref e,repeat,inde, what,depth);
             }
             json = json + "}\n";
