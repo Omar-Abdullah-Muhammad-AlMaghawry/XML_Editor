@@ -86,7 +86,6 @@ namespace XML_editor
                     if (inputXML[currentIndex] != '/')
                     {
                         //Detect name
-                        //TODO ignore comments (comment can be a tag too?)
                         while (inputXML[currentIndex] != ' ' && inputXML[currentIndex] != '>')
                         {
                             //Read tag name
@@ -96,6 +95,27 @@ namespace XML_editor
                         tempStr = new string(temp.ToArray());
                         currentNode.setName(tempStr);
                         temp.Clear();
+
+                        //Ignore comments (comment can be a tag too?)
+                        if(tempStr.Length >= 3)
+                            if(tempStr.Substring(0, 3) == "!--")
+                            {
+                                while (inputXML[currentIndex] != '>')
+                                {
+                                    temp.Add(inputXML[currentIndex]);
+                                    if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                                }
+                                temp.Add(inputXML[currentIndex]);
+                                tempStr = new string(temp.ToArray());
+                                currentNode.setOneAttr(tempStr);
+                                temp.Clear();
+
+                                if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                                while (inputXML[currentIndex] == ' ' || inputXML[currentIndex] == '\n' || inputXML[currentIndex] == '\t')
+                                    if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+
+                                return currentNode;
+                            }
 
                         //continue parsing the tag for attributes, values, and other tags (children)
                         while (inputXML[currentIndex] != '/' && inputXML[currentIndex] != '>')
