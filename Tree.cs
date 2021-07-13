@@ -81,7 +81,8 @@ namespace XML_editor
                             currentNode.setOneAttr(tempStr);
                             temp.Clear();
                             if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
-                            while (inputXML[currentIndex] != ' ' && inputXML[currentIndex] != '>' && inputXML[currentIndex] != '/')
+                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                            while (inputXML[currentIndex] != '"')
                             {
                                 //Read tag attribute value
                                 temp.Add(inputXML[currentIndex]);
@@ -90,6 +91,7 @@ namespace XML_editor
                             tempStr = new string(temp.ToArray());
                             currentNode.setOneAttr(tempStr);
                             temp.Clear();
+                            if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
                             //Skip whitespace
                             while (inputXML[currentIndex] == ' ' || inputXML[currentIndex] == '\n' || inputXML[currentIndex] == '\t')
                                 if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
