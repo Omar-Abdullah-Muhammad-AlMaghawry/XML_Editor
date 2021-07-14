@@ -12,6 +12,7 @@ namespace XML_editor
         private List<Node> children;
         private string value;
         private bool isOneLine = false;
+        private bool isComment = false;
         public Node()
         {
             name = "";
@@ -113,6 +114,18 @@ namespace XML_editor
         public string getValue()
         {
             return value;
+        }
+        public int getCountAttr()
+        {
+            return attr.Count;
+        }
+        public bool getCommentFlag()
+        {
+            return isComment;
+        }
+        public void setCommentFlag(bool val)
+        {
+            isComment = val;
         }
     }
 }

@@ -25,6 +25,19 @@ namespace XML_editor
             {
                 Node root = new Node();
                 Tree tree = new Tree(ref root, richTextBox2.Text);
+                button2.Enabled = true;
+                button3.Enabled = true;
+                button6.Enabled = true;
+                button7.Enabled = true;
+                button4.Enabled = true;
+            }
+            else
+            {
+                button2.Enabled = false;
+                button3.Enabled = false;
+                button6.Enabled = false;
+                button7.Enabled = false;
+                button4.Enabled = false;
             }
         }
 
@@ -64,7 +77,22 @@ namespace XML_editor
 
         private void button3_Click(object sender, EventArgs e)
         {
-
+            if (!errordetection(richTextBox2.Text))
+            {
+                Node root = new Node();
+                Tree tree = new Tree(ref root, richTextBox2.Text);
+                tree.format();
+                richTextBox1.Text = "";
+                for (int i = 0; i < tree.toBePrinted.Count; i++)
+                {
+                    richTextBox1.Text += tree.toBePrinted[i];
+                }
+            }
+            else
+            {
+                richTextBox1.Text += "\n";
+                richTextBox1.Text += "Can't beutify if there are errors";
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -191,6 +219,69 @@ namespace XML_editor
                        richTextBox1.Text = tree.getJSON();*/
 
             }
+        }
+
+        private List<short> compressLZW(string inputFile, string destination)
+        {
+            List<string> table = new List<string>();
+            for (int i = 0; i < 256; i++)
+            {
+                table.Add(((char)i).ToString());
+            }
+
+            int code = 256;
+            string p = "", c = "";
+            p += inputFile[0];
+            List<short> output = new List<short>();
+
+            for (int i = 0; i < inputFile.Length; i++)
+            {
+                if (i != inputFile.Length - 1) c += inputFile[i + 1];
+                
+                Predicate<string> finderPC = delegate (string val) { return val == (p + c); };
+                Predicate<string> finderP1 = delegate (string val) { return val == p; };
+                if (table.FindIndex(finderPC) < table.Count && table.FindIndex(finderPC) > 0)
+                {
+                    p = p + c;
+                }
+                else
+                {
+                    output.Add((short)table.FindIndex(finderP1));
+                    table.Add(p + c);
+                    p = c;
+                }
+                c = "";
+            }
+
+            Predicate<string> finderP = delegate (string val) { return val == p; };
+            output.Add((short)table.FindIndex(finderP));
+            return output;
+
+            using (BinaryWriter binWriter = new BinaryWriter(File.Open(destination, FileMode.Create)))
+            {
+                //write compressed binary to output file
+            }
+        }
+
+        private string decompressLZW(List<int> code)
+        {
+            List<string> table = new List<string>();
+            for (int i = 0; i < 256; i++)
+            {
+                table.Add(((char)i).ToString());
+            }
+
+            int old = code[0], n;
+            string s = table[old];
+            string c = "";
+            c += s[0];
+            int count = 256;
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            List<short> coded = compressLZW("BABAABAAA", "");
         }
     }
 }

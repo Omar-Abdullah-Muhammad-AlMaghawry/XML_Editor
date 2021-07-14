@@ -56,9 +56,11 @@ namespace XML_editor
             // richTextBox1
             // 
             this.richTextBox1.AcceptsTab = true;
+            this.richTextBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.richTextBox1.Location = new System.Drawing.Point(604, 58);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
             this.richTextBox1.Size = new System.Drawing.Size(573, 576);
             this.richTextBox1.TabIndex = 3;
             this.richTextBox1.Text = "";
@@ -155,11 +157,13 @@ namespace XML_editor
             this.button7.TabIndex = 12;
             this.button7.Text = "Compress";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1364, 686);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.button6);
