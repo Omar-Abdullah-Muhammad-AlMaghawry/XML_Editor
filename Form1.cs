@@ -287,15 +287,16 @@ namespace XML_editor
             }
 
             string output = "";
-            int old = code[0], n;
+            int old = code[0], n = 0;
             string s = table[old];
+            output += s;
             string c = "";
             c += s[0];
             int count = 256;
             for (int i = 0; i < code.Count; i++)
             {
-                n = code[i + 1];
-                if(table[n] == table[count - 1])
+                if (i < code.Count - 1) n = code[i + 1]; else break;
+                if(n == table.Count)
                 {
                     s = table[old];
                     s = s + c;
@@ -316,7 +317,7 @@ namespace XML_editor
 
         private void button7_Click(object sender, EventArgs e)
         {
-            List<short> coded = compressLZW("BABAABAAA", "");
+            List<short> coded = compressLZW(richTextBox2.Text, "");
             string message = decompressLZW(coded);
         }
     }
