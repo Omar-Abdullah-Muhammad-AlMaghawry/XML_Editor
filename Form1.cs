@@ -24,8 +24,8 @@ namespace XML_editor
 
         private void richTextBox2_TextChanged(object sender, EventArgs e)
         {
-           /*  root = new Node();
-             tree = new Tree(ref root, richTextBox2.Text);*/
+             root = new Node();
+             tree = new Tree(ref root, richTextBox2.Text);
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -74,7 +74,7 @@ namespace XML_editor
             string json = "";
             bool hasCh = (n.getCountCh() > 0);
             // x.conv2Json(ref n, ref er, ref r, -1, false, 0, ref json,hasCh);
-            x.conv2Json(ref n, -1, false, 0, ref json);
+         //   x.conv2Json(ref n, -1, false, 0, ref json);
             // richTextBox1.Text = x.getJSON();
             //  string json = richTextBox1.Text;
             //   Node x = null;
@@ -82,7 +82,7 @@ namespace XML_editor
             //    Queue<Node> l = new Queue<Node>();
 
             //      tree.conv2Json(ref root, ref er, ref r, -1, false, 0, ref json) ;
-            //  tree.conv2Json(ref root, -1, false, 0, ref json);
+              tree.conv2Json(ref root, -1, false, 0, ref json);
             //richTextBox1.Text = tree.getJSON();
             richTextBox1.Text = json;
         }

@@ -228,6 +228,18 @@ namespace XML_editor
                     r.getAllCh()[j].setRepeated(true);
                     r.getAllCh()[v].setWhoNext(j);
                 }
+              
+                int l = r.getAllCh().FindLastIndex(v ,
+                     delegate (Node n)
+                     {
+                         return n.getName() == m.getAllCh()[v].getName();
+                     });
+
+                if (j > 0 && l > 0 && v == l + 1)
+                {
+                    r.getAllCh()[v].setIsFirst(true);
+                    r.getAllCh()[l].setIsLast(true);
+                }
                 if (j != v && j >= 0 && !repeat1.Contains(j) && !repeat1.Contains(v))
                 {
                     // e.Enqueue(v);
@@ -285,7 +297,7 @@ namespace XML_editor
                 i++;
                 cAttr--;
             }
-
+            
             if (enter)
             {
                 json = json + "\n";
@@ -309,7 +321,7 @@ namespace XML_editor
             }
             if (r.getRepeated())
             {
-                if (!r.getIsLast())
+                if (!r.getIsLast()&&!root.getAllCh().Contains(r))
                 {
                     json = json + "},\n";
                     // e.Dequeue();
@@ -441,7 +453,33 @@ namespace XML_editor
              ////   conv2Json(ref x, ref e, ref repeat, inde, what, depth, ref json, hasCh);
                 conv2Json(ref x,inde, what,depth,ref json);
             }
-            json = json + "}\n";
+            if (r.getRepeated())
+            {
+                if (!r.getIsLast())
+                {
+                    for (int t = 0; t < depth-1; t++)
+                        json = json + "\t";
+                    json = json + "},\n";
+                    // e.Dequeue();
+                    if (!(r.getCountCh() > 0))
+                        return;
+                }
+                else
+                {
+                    if (r.getIsLast())
+                    {
+                        json = json + "}\n";
+                        for (int t = 0; t < depth; t++)
+                            json = json + "\t";
+                        json = json + "]" + "\n";
+                        // e.Dequeue();
+                        if (!(r.getCountCh() > 0))
+                            return;
+                    }
+                }
+            }
+            if(r==root)
+                json = json + "}\n";
 
 
         }
