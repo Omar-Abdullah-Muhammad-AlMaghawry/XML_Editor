@@ -7,10 +7,11 @@
             else
             {
                  
-                  if (s.getCountCh() != 0)
-                  {
-                      ++depth;
-                  }
+//                   if (s.getCountCh() != 0)
+//                   {
+//                       ++depth;
+//                   }
+		    depth++;
                  List<Node> data =s.getAllCh();
         
                  for(int i=0; i<s.getCountCh();i++)
@@ -21,11 +22,11 @@
                  for(int j=0;j<s.getCountCh();j++)
                   {
                   Node d=data[j];
-                  if(s.getCountCh()!=0)
-                   Depth(ref n, ref d);  //error data[j] 
+                  //if(s.getCountCh()!=0)
+                 return  Depth(ref n, ref d);  //error data[j] 
         
                   }
-                  return depth;
+                  return 1;
             }
    
 
