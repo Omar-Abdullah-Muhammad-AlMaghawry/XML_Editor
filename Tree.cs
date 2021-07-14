@@ -258,10 +258,10 @@ namespace XML_editor
             else
             {
 
-                if (s.getCountCh() != 0)
-                {
-                    ++depthn;
-                }
+                //if (s.getCountCh() != 0)
+                //{
+                ++depthn;
+                //}
                 List<Node> data = s.getAllCh();
 
                 for (int i = 0; i < s.getCountCh(); i++)
@@ -272,11 +272,11 @@ namespace XML_editor
                 for (int j = 0; j < s.getCountCh(); j++)
                 {
                     Node d = data[j];
-                    if (s.getCountCh() != 0)
-                        Depth(ref n, ref d);  //error data[j] 
+                    //if (s.getCountCh() != 0)
+                    return Depth(ref n, ref d);  //error data[j] 
 
                 }
-                return depthn;
+                return 1;
             }
 
 
@@ -290,10 +290,10 @@ namespace XML_editor
             for (int i = 0; i < n; i++)
             {
                 //Console.Write(" ");
-                toBePrinted.Add(" ");
+                toBePrinted.Add("    ");
             }
         }
-        public void print(Node r)
+        public void print(Node r, ref int dep)
         {
             bool commentFlag = false;
             if (printedStart == false)//// print startinftags
@@ -306,7 +306,12 @@ namespace XML_editor
                 }
                 printedStart = true;
             }
-            Space(r);
+            //Space(r);
+            for (int i = 0; i < dep; i++)
+            {
+                //Console.Write(" ");
+                toBePrinted.Add("    ");
+            }
             if (r.getName().Length >= 3)//to print comment
             {
                 if(r.getName().Substring(0, 3) == "!--")
@@ -363,7 +368,7 @@ namespace XML_editor
                             toBePrinted.Add(attributes.Dequeue());
                             toBePrinted.Add("\"");
                         }
-                        toBePrinted.Add(">");
+                        //toBePrinted.Add(">");
                     }
                     toBePrinted.Add(">");
                     //Console.Write(r.getValue());
@@ -375,11 +380,18 @@ namespace XML_editor
                         toBePrinted.Add("\n");
                         for (int i = 0; i < r.getCountCh(); i++)
                         {
-                            print(child[i]);
+                            dep += 1;
+                            print(child[i], ref dep);
+                            dep -= 1;
                         }
                     }
                     if (r.getCountCh() != 0)
-                        Space(r);
+                        //Space(r);
+                        for (int i = 0; i < dep; i++)
+                        {
+                            //Console.Write(" ");
+                            toBePrinted.Add("    ");
+                        }
                     //Console.Write("</" + r.getName() + ">");
                     //Console.WriteLine("\n");
                     toBePrinted.Add("</" + r.getName() + ">" + "\n");
@@ -390,7 +402,103 @@ namespace XML_editor
 
         public void format()
         {
-            print(root);
+            int dep = 0;
+            print(root,ref dep);
         }
+
+        public void Mini(Node k)
+        {
+            if (!printedStart)
+            {
+                foreach (string tag in startingTags)
+                {
+                    if(tag.Length >= 4)
+                    {
+                        if (tag.Substring(0, 4) == "<!--") continue;
+                    }
+                    toBePrinted.Add(tag);
+                }
+                printedStart = true;
+            }
+            if (k.getCommentFlag() == false)//remove all comments
+            {
+                if (k.getOneLine() == true)
+                {
+                    //Console.Write("<" + k.getName());
+                    toBePrinted.Add("<" + k.getName());
+                    if (k.getCountAttr() != 0)
+                    {
+                        //foreach (string s in k.getAllAttr())
+                        //{
+                        //    //Console.Write(" " + s);
+                        //    toBePrinted.Add(" " + s);
+                        //}
+                        Queue<string> attributes = k.getAllAttr();
+                        int count = attributes.Count;
+                        for (int i = 0; i < count; i += 2)
+                        {
+                            //Console.Write(" " + s);
+                            toBePrinted.Add(" ");
+                            toBePrinted.Add(attributes.Dequeue());
+                            toBePrinted.Add("=\"");
+                            toBePrinted.Add(attributes.Dequeue());
+                            toBePrinted.Add("\"");
+                        }
+                    }
+                    //Console.Write(" />");
+                    toBePrinted.Add(" />");
+                }
+                else
+                {
+                    //Console.Write("<" + k.getName());
+                    toBePrinted.Add("<" + k.getName());
+
+                    if (k.getCountAttr() != 0)
+                    {
+                        //Console.Write(" ");
+                        toBePrinted.Add(" ");
+                        //foreach (string s in k.getAllAttr())
+                        //{
+                        //    //Console.Write(s + " ");
+                        //    toBePrinted.Add(s + " ");
+                        //}
+                        Queue<string> attributes = k.getAllAttr();
+                        int count = attributes.Count;
+                        for (int i = 0; i < count; i += 2)
+                        {
+                            //Console.Write(" " + s);
+                            toBePrinted.Add(" ");
+                            toBePrinted.Add(attributes.Dequeue());
+                            toBePrinted.Add("=\"");
+                            toBePrinted.Add(attributes.Dequeue());
+                            toBePrinted.Add("\"");
+                        }
+                    }
+                    toBePrinted.Add(">");
+                    //Console.Write(k.getValue());
+                    toBePrinted.Add(k.getValue());
+                    List<Node> child = k.getAllCh();
+                    if (k.getCountCh() != 0)
+                    {
+
+                        for (int i = 0; i < k.getCountCh(); i++)
+                        {
+                            Mini(child[i]);
+                        }
+
+                    }
+                    //Console.Write("</" + k.getName() + ">");
+                    toBePrinted.Add("</" + k.getName() + ">");
+                }
+            }
+        }
+
+        public void Minifying()
+        {
+            toBePrinted.Clear();
+            printedStart = false;
+            Mini(root);
+        }
+
     }
- }
+}

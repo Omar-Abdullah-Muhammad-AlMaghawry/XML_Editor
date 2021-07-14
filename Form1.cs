@@ -102,7 +102,22 @@ namespace XML_editor
 
         private void button6_Click(object sender, EventArgs e)
         {
-
+            if (!errordetection(richTextBox2.Text))
+            {
+                Node root = new Node();
+                Tree tree = new Tree(ref root, richTextBox2.Text);
+                tree.Minifying();
+                richTextBox1.Text = "";
+                for (int i = 0; i < tree.toBePrinted.Count; i++)
+                {
+                    richTextBox1.Text += tree.toBePrinted[i];
+                }
+            }
+            else
+            {
+                richTextBox1.Text += "\n";
+                richTextBox1.Text += "Can't minify if there are errors";
+            }
         }
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
@@ -263,7 +278,7 @@ namespace XML_editor
             }
         }
 
-        private string decompressLZW(List<int> code)
+        private string decompressLZW(List<short> code)
         {
             List<string> table = new List<string>();
             for (int i = 0; i < 256; i++)
@@ -271,17 +286,38 @@ namespace XML_editor
                 table.Add(((char)i).ToString());
             }
 
+            string output = "";
             int old = code[0], n;
             string s = table[old];
             string c = "";
             c += s[0];
             int count = 256;
-
+            for (int i = 0; i < code.Count; i++)
+            {
+                n = code[i + 1];
+                if(table[n] == table[count - 1])
+                {
+                    s = table[old];
+                    s = s + c;
+                }
+                else
+                {
+                    s = table[n];
+                }
+                output += s;
+                c = "";
+                c += s[0];
+                table.Add(table[old] + c);
+                count++;
+                old = n;
+            }
+            return output;
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
             List<short> coded = compressLZW("BABAABAAA", "");
+            string message = decompressLZW(coded);
         }
     }
 }
