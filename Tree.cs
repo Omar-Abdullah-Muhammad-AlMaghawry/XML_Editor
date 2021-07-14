@@ -210,10 +210,13 @@ namespace XML_editor
 
         {
 
-            Queue<int> e = new Queue<int>();
+            Queue<int> ef = new Queue<int>();
+            Queue<int> el = new Queue<int>();
+
             List<int> repeat1= new List<int>();
             int i = 0;
             bool enter = false;
+            int l = -1;
             //    
             Node m = r;
             for (int v = 0; v < r.getCountCh(); v++)
@@ -227,35 +230,66 @@ namespace XML_editor
                 {
                     r.getAllCh()[j].setRepeated(true);
                     r.getAllCh()[v].setWhoNext(j);
+                   
                 }
-              
-                int l = r.getAllCh().FindLastIndex(v ,
+                int f = r.getAllCh().FindIndex(
                      delegate (Node n)
                      {
                          return n.getName() == m.getAllCh()[v].getName();
                      });
+                if (f > 0 && !ef.Contains(f))
+                    ef.Enqueue(f);
 
-                if (j > 0 && l > 0 && v == l + 1)
-                {
-                    r.getAllCh()[v].setIsFirst(true);
-                    r.getAllCh()[l].setIsLast(true);
-                }
+                //            if(v+1<r.getCountCh())
+                l = r.getAllCh().FindLastIndex(
+                     delegate (Node n)
+                     {
+                         return n.getName() == m.getAllCh()[v].getName();
+                     });
+              if( l > 0 && !el.Contains(l))
+                el.Enqueue(l);
+              ///very woooorking
+                //if (j > 0 && v == el.Peek() + 1)
+                //{
+                //   r.getAllCh()[v].setIsFirst(true);
+                //    r.getAllCh()[l].setIsLast(true);
+                //    el.Dequeue();
+                //}
                 if (j != v && j >= 0 && !repeat1.Contains(j) && !repeat1.Contains(v))
                 {
                     // e.Enqueue(v);
                     repeat1.Add(v);
                     // e.Enqueue(j);
                     repeat1.Add(j);
-                 //   r.getAllCh()[v].setWhoNext(j);
+                 //  r.getAllCh()[v].setWhoNext(j);
 
                 }
 
+            }
+            while (el.Count != 0)
+            {
+
+                if (!r.getAllCh()[el.Peek()].getIsFirst())
+                    r.getAllCh()[el.Peek()].setIsLast(true);
+                el.Dequeue();
+            }
+            while (ef.Count != 0)
+            {
+                if (!r.getAllCh()[ef.Peek()].getIsLast())
+                    r.getAllCh()[ef.Peek()].setIsFirst(true);
+                ef.Dequeue();
             }
             if (r.getCountCh() > 0&&repeat1.Count>0)
             {
                 int f = repeat1[0];
                 r.getAllCh()[repeat1[0]].setIsFirst(true);
+                r.getAllCh()[repeat1[0]].setIsFirstFirst(true);
                 r.getAllCh()[repeat1[repeat1.Count - 1]].setIsLast(true);
+                r.getAllCh()[repeat1[repeat1.Count - 1]].setIsLastLast(true);
+            }
+            if (r == root)
+            {
+                json = json + "{" + "\n";
             }
             if (!r.getRepeated())
             {
@@ -319,8 +353,10 @@ namespace XML_editor
                     json = json + "\t";
 
             }
+            //fakr 4elha
             if (r.getRepeated())
             {
+
                 if (!r.getIsLast()&&!root.getAllCh().Contains(r))
                 {
                     json = json + "},\n";
@@ -328,6 +364,7 @@ namespace XML_editor
                     if (!(r.getCountCh() > 0))
                         return;
                 }
+
                 else
                 {
                     if (r.getIsLast())
@@ -335,9 +372,12 @@ namespace XML_editor
                         json = json + "}\n";
                         for (int t = 0; t < depth; t++)
                             json = json + "\t";
-                        json = json + "]" + "\n";
-                       // e.Dequeue();
-                       if(!(r.getCountCh()>0))
+                       
+                        if(!r.getIsLastLast())
+                            json = json + "]," + "\n";
+                        else json = json + "]" + "\n";
+                        // e.Dequeue();
+                        if (!(r.getCountCh()>0))
                         return;
                     }
                 }
@@ -346,12 +386,16 @@ namespace XML_editor
 
             if (r.getCountCh() == 0)
             {
-                json = json + "}\n";
+                if(((!r.getIsFirst() || !r.getIsFirstFirst()) && r.getRepeated() )|| ((r.getIsLast())&&r.getRepeated())|| (r.getIsLastLast())) 
+                    json = json + "}\n";
+                else if (r.getIsFirst()||r.getIsFirstFirst()||!r.getRepeated())
+                    json = json + "},\n";
+                 
                 return;
             }
+            
 
-
-            for (int j = 0; j < r.getCountCh(); j++)
+                for (int j = 0; j < r.getCountCh(); j++)
             {
                 ////if (r.getRepeated() && !hasCh)
                 //if (r.getIsTaken())
@@ -452,12 +496,13 @@ namespace XML_editor
                 depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
              ////   conv2Json(ref x, ref e, ref repeat, inde, what, depth, ref json, hasCh);
                 conv2Json(ref x,inde, what,depth,ref json);
+               
             }
             if (r.getRepeated())
             {
                 if (!r.getIsLast())
                 {
-                    for (int t = 0; t < depth-1; t++)
+                    for (int t = 0; t < depth - 1; t++)
                         json = json + "\t";
                     json = json + "},\n";
                     // e.Dequeue();
@@ -471,14 +516,19 @@ namespace XML_editor
                         json = json + "}\n";
                         for (int t = 0; t < depth; t++)
                             json = json + "\t";
-                        json = json + "]" + "\n";
+                        //////////json = json + "]" + "\n";
+                        ///
+                        if (!r.getIsLastLast())
+                            json = json + "]," + "\n";
+                        else json = json + "]" + "\n";
+
                         // e.Dequeue();
                         if (!(r.getCountCh() > 0))
                             return;
                     }
                 }
             }
-            if(r==root)
+            if (r==root)
                 json = json + "}\n";
 
 

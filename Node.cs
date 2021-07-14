@@ -17,6 +17,9 @@ namespace XML_editor
         private bool isLast;
         private bool isTaken;
         private int whoNext;
+        private bool isLastLast;
+        private bool isFirstFirst;
+
 
 
 
@@ -31,6 +34,8 @@ namespace XML_editor
             repeated = false;
             isFirst = false;
             isLast = false;
+            isLastLast = false;
+            isFirstFirst = false;
             isTaken = false;
             whoNext = -1;
         }
@@ -44,6 +49,8 @@ namespace XML_editor
             repeated = false;
             isFirst = false;
             isLast = false;
+            isLastLast = false;
+            isFirstFirst = false;
             isTaken = false;
             whoNext = -1;
         }
@@ -57,6 +64,8 @@ namespace XML_editor
             repeated = false;
             isFirst = false;
             isLast = false;
+            isLastLast = false;
+            isFirstFirst = false;
             isTaken = false;
             whoNext = -1;
         }
@@ -70,6 +79,8 @@ namespace XML_editor
             repeated = false;
             isFirst = false;
             isLast = false;
+            isLastLast = false;
+            isFirstFirst = false;
             isTaken = false;
             whoNext = -1;
         }
@@ -82,6 +93,25 @@ namespace XML_editor
             return isOneLine;
         
       }
+        public void setIsLastLast(bool inp)
+        {
+            isLastLast = inp;
+        }
+        public bool getIsLastLast()
+        {
+            return isLastLast;
+
+        }
+
+        public void setIsFirstFirst (bool inp)
+        {
+            isFirstFirst = inp;
+        }
+        public bool getIsFirstFirst()
+        {
+            return isFirstFirst;
+
+        }
         public void setWhoNext(int inp)
         {
             whoNext = inp;
