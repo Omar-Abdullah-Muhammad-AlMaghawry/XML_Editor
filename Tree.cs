@@ -13,7 +13,7 @@ namespace XML_editor
         private List<int> tempRe;
         private Queue<int> temQu;
         private int tempIndex;
-
+        private List<string> startingTags = new List<string>();
         int depTemp;
         private string prolog = "";
 
@@ -31,26 +31,34 @@ namespace XML_editor
         {
             tempRe = new List<int>();
             depTemp = 0;
-            json0 = "";
-            tempIndex=-1;
-
+            tempIndex = -1;
+            List<char> temp = new List<char>();
+            string tempStr;
             int index = 0;
-            if (inputText.Length >= 2) {
-                if(inputText.Substring(1, 4) == "?xml")
+            while (true)
+            {
+                if (inputText.Length >= index + 4)
                 {
-                    List<char> temp = new List<char>();
-                    string tempStr;
-                    while(inputText[index] != '>')
+                    if (inputText.Substring(index, 4) == "<!--" || inputText.Substring(index, 4) == "<?xm")
                     {
+                        while (inputText[index] != '>')
+                        {
+                            temp.Add(inputText[index]);
+                            if (index < inputText.Length - 1) index++; else break;
+                        }
                         temp.Add(inputText[index]);
-                        if (index < inputText.Length - 1) index++; else break;
+                        tempStr = new string(temp.ToArray());
+                        startingTags.Add(tempStr);
+                        temp.Clear();
+                        if (index < inputText.Length - 1) index++;
+                        while (inputText[index] == ' ' || inputText[index] == '\n' || inputText[index] == '\t')
+                            if (index < inputText.Length - 1) index++; else break;
                     }
-                    tempStr = new string(temp.ToArray());
-                    prolog = tempStr;
-                    if (index < inputText.Length - 1) index++;
-                    if (index < inputText.Length - 1) index++;
+                    else break;
                 }
+                else break;
             }
+
             root = parseNode(inputText, ref index);
             n = root;
         }
@@ -67,7 +75,6 @@ namespace XML_editor
                     if (inputXML[currentIndex] != '/')
                     {
                         //Detect name
-                        //TODO ignore comments (comment can be a tag too?)
                         while (inputXML[currentIndex] != ' ' && inputXML[currentIndex] != '>')
                         {
                             //Read tag name
@@ -77,6 +84,28 @@ namespace XML_editor
                         tempStr = new string(temp.ToArray());
                         currentNode.setName(tempStr);
                         temp.Clear();
+
+                        //Ignore comments (comment can be a tag too?)
+                        if(tempStr.Length >= 3)
+                            if(tempStr.Substring(0, 3) == "!--")
+                            {
+                                while (inputXML[currentIndex] != '>')
+                                {
+                                    temp.Add(inputXML[currentIndex]);
+                                    if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                                }
+                                temp.Add(inputXML[currentIndex]);
+                                tempStr = new string(temp.ToArray());
+                                currentNode.setOneAttr(tempStr);
+                                temp.Clear();
+
+                                if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+                                while (inputXML[currentIndex] == ' ' || inputXML[currentIndex] == '\n' || inputXML[currentIndex] == '\t')
+                                    if (currentIndex < inputXML.Length - 1) currentIndex++; else break;
+
+                                currentNode.setOneLine(true);
+                                return currentNode;
+                            }
 
                         //continue parsing the tag for attributes, values, and other tags (children)
                         while (inputXML[currentIndex] != '/' && inputXML[currentIndex] != '>')
@@ -165,9 +194,9 @@ namespace XML_editor
             }
             return currentNode;
         }
-        public string getProlog()
+        public List<string> getStartingTags()
         {
-            return prolog;
+            return startingTags;
         }
         public void insert() { }
         public void format() { }
@@ -206,7 +235,7 @@ namespace XML_editor
             return c;
         }
        // public void conv2Json(ref Node r, ref Queue<int> e, ref List<int> repeat, int ind, bool equal, int depth, ref string json, bool hasCh)
-        public void conv2Json(ref Node r, int ind, bool equal, int depth, ref string json)
+        public void conv2Json(ref Node r, int ind, bool equal,ref int depth, ref string json)
 
         {
 
@@ -218,6 +247,7 @@ namespace XML_editor
             bool enter = false;
             int l = -1;
             //    
+            
             Node m = r;
             for (int v = 0; v < r.getCountCh(); v++)
             {
@@ -297,7 +327,7 @@ namespace XML_editor
                     json = json + "\t";
                 json = json + "\"" + $"{r.getName()}\": " + "\n";
             }
-
+            
             if (r.getIsFirst())
             {
 
@@ -334,13 +364,22 @@ namespace XML_editor
             
             if (enter)
             {
-                json = json + "\n";
-                for (int t = 0; t < depth; t++)
-                    json = json + "\t";
+                if (r.getValue() != "")
+                {
+                    json = json + "\n";
+                    for (int t = 0; t < depth; t++)
+                        json = json + "\t";
 
-                json = json + "#text: " + $"\"{r.getValue() }\"" + "\n";
-                for (int t = 0; t < depth; t++)
-                    json = json + "\t";
+                    json = json + "#text: " + $"\"{r.getValue() }\"" + "\n";
+                    for (int t = 0; t < depth; t++)
+                        json = json + "\t";
+                }
+                else
+                {
+                    json = json + "\n";
+                    for (int t = 0; t < depth; t++)
+                        json = json + "\t";
+                }
 
             }
             else
@@ -357,8 +396,10 @@ namespace XML_editor
             if (r.getRepeated())
             {
 
-                if (!r.getIsLast()&&!root.getAllCh().Contains(r))
+                if (!r.getIsLast() && !root.getAllCh().Contains(r))
                 {
+                    //if (!r.getIsLast() )
+                    //{
                     json = json + "},\n";
                     // e.Dequeue();
                     if (!(r.getCountCh() > 0))
@@ -490,19 +531,20 @@ namespace XML_editor
                                     left = r.getAllCh()[j - 1];
                    */                 //   if(getDepth(ref x)==0&& r.getCountCh() >= 1)
                                       //       if (j - 1 > 0&& j + 1 < r.getAllCh().Count&&(getDepth(ref x)== getDepth(ref right) || getDepth(ref x) == getDepth(ref left)))
-                if (x.getCountCh() >= 1)
-                    depTemp = depth;
-                // depTemp = getDepth(ref root) - getDepth(ref x);
-                depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
-             ////   conv2Json(ref x, ref e, ref repeat, inde, what, depth, ref json, hasCh);
-                conv2Json(ref x,inde, what,depth,ref json);
-               
+                                      ////if (x.getCountCh() >= 1)
+                                      ////    depTemp = depth;
+                                      ////// depTemp = getDepth(ref root) - getDepth(ref x);
+                                      ////depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
+                                      ////   conv2Json(ref x, ref e, ref repeat, inde, what, depth, ref json, hasCh);
+                depth++;
+                conv2Json(ref x,inde, what,ref depth,ref json);
+                depth--;
             }
             if (r.getRepeated())
             {
                 if (!r.getIsLast())
                 {
-                    for (int t = 0; t < depth - 1; t++)
+                    for (int t = 0; t < depth; t++)
                         json = json + "\t";
                     json = json + "},\n";
                     // e.Dequeue();
