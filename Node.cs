@@ -12,6 +12,15 @@ namespace XML_editor
         private List<Node> children;
         private string value;
         private bool isOneLine = false;
+        private bool repeated;
+        private bool isFirst ;
+        private bool isLast;
+        private bool isTaken;
+        private int whoNext;
+
+
+
+
         public Node()
         {
             name = "";
@@ -19,6 +28,11 @@ namespace XML_editor
             attr = new Queue<string>();
             children = new List<Node>();
             index = 0;
+            repeated = false;
+            isFirst = false;
+            isLast = false;
+            isTaken = false;
+            whoNext = -1;
         }
         public Node(string n)
         {
@@ -27,6 +41,11 @@ namespace XML_editor
             attr = new Queue<string>();
             children = new List<Node>();
             index = 0;
+            repeated = false;
+            isFirst = false;
+            isLast = false;
+            isTaken = false;
+            whoNext = -1;
         }
         public Node(string n, string v)
         {
@@ -35,6 +54,11 @@ namespace XML_editor
             attr = new Queue<string>();
             children = new List<Node>();
             index = 0;
+            repeated = false;
+            isFirst = false;
+            isLast = false;
+            isTaken = false;
+            whoNext = -1;
         }
         public Node(string n,ref Queue<string> att,ref List<Node> ch, string v)
         {
@@ -43,6 +67,11 @@ namespace XML_editor
             children = ch;
             value = v;
             index = 0;
+            repeated = false;
+            isFirst = false;
+            isLast = false;
+            isTaken = false;
+            whoNext = -1;
         }
         public void setOneLine(bool inp)
         {
@@ -51,6 +80,48 @@ namespace XML_editor
         public bool getOneLine()
         {
             return isOneLine;
+        
+      }
+        public void setWhoNext(int inp)
+        {
+            whoNext = inp;
+        }
+        public int getWhoNext()
+        {
+            return whoNext;
+
+        }
+        public void setRepeated(bool inp)
+        {
+            repeated = inp;
+        }
+        public bool getRepeated()
+        {
+            return repeated;
+        }
+        public void setIsFirst(bool inp)
+        {
+            isFirst = inp;
+        }
+        public bool getIsFirst()
+        {
+            return isFirst;
+        }
+        public void setIsLast(bool inp)
+        {
+            isLast = inp;
+        }
+        public bool getIsLast()
+        {
+            return isLast;
+        }
+        public void setIsTaken(bool inp)
+        {
+            isTaken  = inp;
+        }
+        public bool getIsTaken()
+        {
+            return isTaken;
         }
         public void setName(string n)
         {
