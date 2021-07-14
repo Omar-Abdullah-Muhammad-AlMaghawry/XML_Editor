@@ -199,8 +199,7 @@ namespace XML_editor
           
             return c;
         }
-
-        public void conv2Json(ref Node r, ref Queue<int> e, ref List<int> repeat, int ind, bool equal, int depth, ref string json)
+        public void conv2Json(ref Node r, ref Queue<int> e, ref List<int> repeat, int ind, bool equal, int depth, ref string json,bool hasCh)
         //public void conv2Json(ref Node r, int ind, bool equal, int depth, ref string json)
 
         {
@@ -210,39 +209,15 @@ namespace XML_editor
             //List<int> repeat= new List<int>();
             int i = 0;
             bool enter = false;
-            //       depTemp = depth;          
-            //    depth = (r.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref r) : getDepth(ref root) - getDepth(ref r) + 1;
-            //  depth = getDepthNode(ref root, ref r);
-            //    r.getAllCh().Sort();
-            //if(r.getCountCh()<50)
-            //  for (int j = 0; j < r.getCountCh(); j++)
-            //      for (int v = 0; v < r.getCountCh(); v++)
-            //      {
-            //          if (j != v && r.getAllCh()[j].getName().Equals(r.getAllCh()[v].getName()) && !e.Contains(j))
-            //           //   e.AddLast(j);
-            //         // if (r.getAllCh().BinarySearch())
-            //          {
-            //      //        r.getAllCh().BinarySearch(r.getAllCh()[v]);
-            //              e.Enqueue(j);
-            //              repeat.Add(j);
-
-            //          }
-            //      }
-            //  if (r.getCountCh() < 50)
-            //  for (int j = 0; j < r.getCountCh(); j++)
+            //    
             Node m = r;
             for (int v = 0; v < r.getCountCh(); v++)
-                    {
-                // if (j != v && r.getAllCh()[j].getName().Equals(r.getAllCh()[v].getName()) && !e.Contains(j))
-                //   e.AddLast(j);
-                // if (r.getAllCh().BinarySearch())
-                // {
-                //        r.getAllCh().BinarySearch(r.getAllCh()[v]);
-               int j =  r.getAllCh().FindIndex(v+1,
-                    delegate (Node n)
-                    {
-                        return n.getName() == m.getAllCh()[v].getName();
-                    });
+            {
+                int j = r.getAllCh().FindIndex(v + 1,
+                     delegate (Node n)
+                     {
+                         return n.getName() == m.getAllCh()[v].getName();
+                     });
                 if (j != v && j >= 0 && !e.Contains(j) && !e.Contains(v))
                 {
                     e.Enqueue(v);
@@ -251,41 +226,28 @@ namespace XML_editor
                     repeat.Add(j);
 
                 }
-              //  e.Dequeue();
-                       // }
-                    }
-            /*  Node m = r;
-                List<Node> nodes;
-                for (int v = 0; v < r.getCountCh(); v++)
-                    {
-                   List<Node> nodes = r.getAllCh().FindAll(
-                    delegate (Node n)
-                    {
-                        return  n.getName() == m.getAllCh()[v].getName();
-
-                    }
-                    );
-                }*/
-            //for(int v =0;v<)
-            if (!repeat.Contains(ind) || ind == repeat[0])
-            { for (int t = 0; t < depth; t++)
-                    json = json + "\t";
-                json = json +"\"" +$"{r.getName()}\": " + "\n";
-            }
-            
-            if (e.Count != 0  &&repeat.Count>0 &&ind == repeat[0])
-            {
                 
+            }
+            if (!repeat.Contains(ind) || ind == repeat[0])
+            {
                 for (int t = 0; t < depth; t++)
                     json = json + "\t";
-                json = json + "["+"\n";
+                json = json + "\"" + $"{r.getName()}\": " + "\n";
+            }
+
+            if (e.Count != 0 && repeat.Count > 0 && ind == repeat[0])
+            {
+
+                for (int t = 0; t < depth; t++)
+                    json = json + "\t";
+                json = json + "[" + "\n";
             }
             for (int t = 0; t < depth; t++)
                 json = json + "\t";
             json = json + "{";
-            if (r.getOneLine()&&r.getAllAttr().Count==0)
+            if (r.getOneLine() && r.getAllAttr().Count == 0)
             {
-                json = json + "null"+"\n";
+                json = json + "null" + "\n";
             }
             int cAttr = r.getAllAttr().Count;
             while (cAttr != 0)
@@ -306,7 +268,7 @@ namespace XML_editor
                 i++;
                 cAttr--;
             }
-            
+
             if (enter)
             {
                 json = json + "\n";
@@ -328,7 +290,7 @@ namespace XML_editor
                     json = json + "\t";
 
             }
-            if (e.Count != 0  && e.Contains(ind))
+            if (e.Count != 0 && e.Contains(ind))
             {
                 if (repeat[repeat.Count - 1] != e.Peek())
                 {
@@ -338,36 +300,54 @@ namespace XML_editor
                 }
                 else
                 {
-                    json = json + "}\n";
-                    for (int t = 0; t < depth; t++)
-                        json = json + "\t";
-                    json = json + "]"+"\n";
-                    e.Dequeue();
-                
-                     return;
+                    if (!hasCh)
+                    {
+                        json = json + "}\n";
+                        for (int t = 0; t < depth; t++)
+                            json = json + "\t";
+                        json = json + "]" + "\n";
+                        e.Dequeue();
+                        return;
+                    }
                 }
             }
-           
+
 
             if (r.getCountCh() == 0)
             {
                 json = json + "}\n";
                 return;
             }
-           
+
 
             for (int j = 0; j < r.getCountCh(); j++)
             {
-                //if(r.getCountCh()<50)
-                if (tempRe.Count >= 1)
-                { repeat = tempRe;
-                    //e = temQu;
-                }
-                if (j!=0&&repeat.Contains(j))
+                if (repeat.Contains(j)&&!hasCh)
                     continue;
+                //if(r.getCountCh()<50)
+                if (tempRe.Count >= 1&& temQu.Count >= 1)
+                {
+                    repeat = tempRe;
+                   // e = temQu;
+                }
+                if (hasCh)
+                {
+                    tempRe = repeat;
+                    repeat = new List<int>();
+                    temQu = e;
+                    e = new Queue<int>();
+
+                }
+                else {
+                    if (tempRe.Count >= 1 && temQu.Count >= 1)
+                    {
+                        repeat = tempRe;
+                         e = temQu;
+                    }
+                }
                 // Node y = r.getAllCh()[e.Peek()];
                 //    conv2Json(ref x, ref e, e.Peek(), true);
-                Node x ;
+                Node x;
                 Node s;
                 bool what;
                 int inde;
@@ -375,42 +355,25 @@ namespace XML_editor
                 if ((e.Count != 0))
                 {
                     x = r.getAllCh()[e.Peek()];
-                   
+
                     what = true;
                     inde = e.Peek();
                     if (!equal)
                     {
                         j--;
                     }
-                }
-               else if ((e.Count != 0) && r.getCountCh() > 0)
-                {
-                    // depTemp = getDepth(ref root) - getDepth(ref x);
-                  
-                        x = r.getAllCh()[j];
-                        inde = j;
-                        what = false;
-                    //if (s.getCountCh() >= 1)
-                    //{
-                    //    tempRe = repeat;
-                    //    repeat = new List<int>();
+                    if (x.getCountCh() > 0)
+                        hasCh = true;
+                    else
+                        hasCh = false;
 
-                    //}
-
-                    //if (s.getCountCh() >= 1)
-                    //    depTemp = depth;
-
-                    // depTemp = getDepth(ref root) - getDepth(ref x);
-                    //depth = (s.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
-
-                    //conv2Json(ref s, ref e, ref repeat, inde, what, depth, ref json);
                 }
                 else
                 {
 
                     x = r.getAllCh()[j];
 
-                    if (x.getCountCh() >= 1)
+                    if ((!hasCh && x.getCountCh() >= 1)||(hasCh && r ==root))
                     {
                         tempRe = repeat;
                         repeat = new List<int>();
@@ -421,8 +384,12 @@ namespace XML_editor
 
                     what = false;
                     inde = j;
+                    if (x.getCountCh() > 0)
+                        hasCh = true;
+                    else
+                        hasCh = false;
                 }
-             
+
                 /*                Node right;
                                 Node left;
                                 if (j+1 <r.getAllCh().Count)
@@ -432,17 +399,645 @@ namespace XML_editor
                    */                 //   if(getDepth(ref x)==0&& r.getCountCh() >= 1)
                                       //       if (j - 1 > 0&& j + 1 < r.getAllCh().Count&&(getDepth(ref x)== getDepth(ref right) || getDepth(ref x) == getDepth(ref left)))
                 if (x.getCountCh() >= 1)
-                depTemp = depth ;
+                    depTemp = depth;
                 // depTemp = getDepth(ref root) - getDepth(ref x);
-               depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x)  :  depTemp + 1;
-                conv2Json(ref x, ref e, ref repeat, inde, what, depth, ref json);
+                depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
+                conv2Json(ref x, ref e, ref repeat, inde, what, depth, ref json,hasCh);
                 //conv2Json(ref x,inde, what,depth,ref json);
             }
             json = json + "}\n";
-            
 
-        } 
-public string getJSON()
+
+        }
+        ////  public void conv2Json(ref Node r, ref Queue<int> e, ref List<int> repeat, int ind, bool equal, int depth, ref string json, ref Queue<Node> childreen, bool hasCh)
+        //   public void conv2Json(ref Node r, ref List<int> repeat, int ind, bool equal, int depth, ref string json)
+
+        //  {
+
+        //        Queue<int> e = new Queue<int>();
+        //      //List<int> repeat= new List<int>();
+        //      int i = 0;
+        //      bool enter = false;
+        //      Node m = r;
+        //      for (int v = 0; v < r.getCountCh(); v++)
+        //      {
+        //          int j = r.getAllCh().FindIndex(v + 1,
+        //               delegate (Node n)
+        //               {
+        //                   return n.getName() == m.getAllCh()[v].getName();
+        //               });
+        //          if (j != v && j >= 0 && !e.Contains(j) && !e.Contains(v))
+        //          {
+        //              e.Enqueue(v);
+        //              repeat.Add(v);
+        //              e.Enqueue(j);
+        //              repeat.Add(j);
+
+        //          }
+        //      }
+        //      if (!repeat.Contains(ind) || ind == repeat[0])
+        //      {
+        //          for (int t = 0; t < depth; t++)
+        //              json = json + "\t";
+        //          json = json + "\"" + $"{r.getName()}\": " + "\n";
+        //      }
+
+        //      if (e.Count != 0 && repeat.Count > 0 && ind == repeat[0])
+        //      {
+
+        //          for (int t = 0; t < depth; t++)
+        //              json = json + "\t";
+        //          json = json + "[" + "\n";
+        //      }
+        //      for (int t = 0; t < depth; t++)
+        //          json = json + "\t";
+        //      json = json + "{";
+        //      if (r.getOneLine() && r.getAllAttr().Count == 0)
+        //      {
+        //          json = json + "null" + "\n";
+        //      }
+        //      int cAttr = r.getAllAttr().Count;
+        //      while (cAttr != 0)
+        //      {
+
+        //          enter = true;
+
+        //          if (i % 2 == 0)
+
+        //          {
+        //              json = json + "\n";
+        //              for (int t = 0; t < depth; t++)
+        //                  json = json + "\t";
+        //              json = json + $"@{r.getOneAttr()}: ";
+        //          }
+        //          else
+        //              json = json + $"{r.getOneAttr()}";
+        //          i++;
+        //          cAttr--;
+        //      }
+
+        //      if (enter)
+        //      {
+        //          json = json + "\n";
+        //          for (int t = 0; t < depth; t++)
+        //              json = json + "\t";
+
+        //          json = json + "#text: " + $"\"{r.getValue() }\"" + "\n";
+        //          for (int t = 0; t < depth; t++)
+        //              json = json + "\t";
+
+        //      }
+        //      else
+        //      {
+        //          json = json + "\n";
+        //          for (int t = 0; t < depth; t++)
+        //              json = json + "\t";
+        //          json = json + $"\"{r.getValue() }\"" + "\n";
+        //          for (int t = 0; t < depth; t++)
+        //              json = json + "\t";
+
+        //      }
+        //      if (e.Count != 0 && e.Contains(ind))
+        //      {
+        //          if (repeat[repeat.Count - 1] != e.Peek())
+        //          {
+        //              json = json + "},\n";
+        //              e.Dequeue();
+        //              //  return;
+        //          }
+        //          else
+        //          {
+        //              json = json + "}\n";
+        //              for (int t = 0; t < depth; t++)
+        //                  json = json + "\t";
+        //              json = json + "]" + "\n";
+        //              e.Dequeue();
+
+        //              //     return;
+        //          }
+        //      }
+
+
+        //      if (r.getCountCh() == 0)
+        //      {
+        //          json = json + "}\n";
+        //          //  return;
+        //      }
+
+
+        //          //if (hasCh && childreen.Count > 0)
+        //          //{
+
+        //          //    // Node y = r.getAllCh()[e.Peek()];
+        //          //    //    conv2Json(ref x, ref e, e.Peek(), true);
+        //          //    Node x;
+        //          //    Node s;
+        //          //    bool what;
+        //          //    int inde = 0;
+        //          //    while (childreen.Count != 0)
+        //          //    {
+        //          //        //if (tempRe.Count >= 1)
+        //          //        //{
+        //          //        //    repeat = tempRe;
+        //          //        //    //e = temQu;
+        //          //        //}
+        //          //        //if (v != 0 && repeat.Contains(v))
+        //          //        //    continue;
+        //          //        //if ((e.Count != 0))
+        //          //        //{
+        //          //        //    x = r.getAllCh()[e.Peek()];
+
+        //          //        //    what = true;
+        //          //        //    inde = e.Peek();
+        //          //        //    if (!equal)
+        //          //        //    {
+        //          //        //        j--;
+        //          //        //    }
+        //          //        //}
+        //          //        //List<Node> l = new List<Node>();
+        //          //        //s = childreen[v];
+        //          //        //inde = v;
+        //          //        List<Node> l = new List<Node>();
+        //          //        s = childreen.Peek();
+        //          //        childreen.Dequeue();
+        //          //        inde++;
+        //          //        what = false;
+        //          //        conv2Json(ref s, ref e, ref repeat, inde, what, depth, ref json, ref childreen, hasCh);
+
+        //          //    }
+        //          //    return;
+        //          //}
+        //          for (int j = 0; j < r.getCountCh(); j++)
+        //      {
+        //          //if(r.getCountCh()<50)
+        //          if (tempRe.Count >= 1)
+        //          {
+        //              repeat = tempRe;
+        //              //e = temQu;
+        //          }
+        //          if (j != 0 && repeat.Contains(j))
+        //              continue;
+        //          Node x;
+        //          Node s;
+        //          bool what;
+        //          int inde;
+        //          if ((e.Count != 0))
+        //          {
+        //              x = r.getAllCh()[e.Peek()];
+
+        //              what = true;
+        //              inde = e.Peek();
+        //              if (!equal)
+        //              {
+        //                  j--;
+        //              }
+        //              //if (x.getCountCh() > 0)
+        //              //{
+        //              //    hasCh = true;
+        //              //    for (int c = 0; c < x.getCountCh(); c++)
+        //              //        childreen.Enqueue(x.getAllCh()[c]);
+        //              //    //tempRe = repeat;
+        //              //    //repeat = new List<int>();
+        //              //    //temQu = e;
+        //              //    //e = new Queue<int>();
+        //              //    if (hasCh && childreen.Count > 0)
+        //              //    {
+        //              //        tempRe = repeat;
+        //              //        repeat = new List<int>();
+        //              //        temQu = e;
+        //              //        e = new Queue<int>();
+        //              //    }
+
+        //              //}
+        //              //else
+        //              //{
+        //              //    hasCh = false;
+        //              //    childreen = new Queue<Node>();
+        //              //    if (tempRe.Count >= 1 && temQu.Count >= 1)
+        //              //    {
+        //              //        repeat = tempRe;
+        //              //        e = temQu;
+        //              //    }
+        //              //}
+        //          }
+
+        //          else
+        //          {
+
+        //              x = r.getAllCh()[j];
+
+        //              if (x.getCountCh() >= 1)
+        //              {
+        //                  tempRe = repeat;
+        //                  repeat = new List<int>();
+        //                  //temQu = e;
+        //                  //e = new Queue<int>();
+
+        //              }
+
+        //              what = false;
+        //              inde = j;
+        //          }
+
+        //          if (x.getCountCh() >= 1)
+        //              depTemp = depth;
+
+        //          // depTemp = getDepth(ref root) - getDepth(ref x);
+        //          depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
+        //          conv2Json(ref x, ref e, ref repeat, inde, what, depth, ref json, ref childreen, hasCh);
+        //         // conv2Json(ref x, ref repeat, inde, what, depth, ref json);
+        //          //if (hasCh && childreen.Count > 0)
+        //          //{
+
+        //          //    inde = 0;
+        //          //    while (childreen.Count != 0)
+        //          //    {
+        //          //        //        if (x.getCountCh() >= 1)
+        //          //        //        {
+        //          //        //            tempRe = repeat;
+        //          //        //            repeat = new List<int>();
+        //          //        //            temQu = e;
+        //          //        //            e = new Queue<int>();
+
+        //          //        //        }
+        //          //        s = childreen.Peek();
+        //          //        childreen.Dequeue();
+        //          //        inde++;
+        //          //        what = false;
+        //          //        conv2Json(ref s, ref e, ref repeat, inde, what, depth, ref json, ref childreen, hasCh);
+
+        //          //    }
+        //          //    return;
+        //          //}
+        //      }
+        //      json = json + "}\n";
+
+
+        //  }
+        //    public void conv2Json(ref Node r, ref Queue<int> e, ref List<int> repeat, int ind, bool equal, int depth, ref string json, ref Queue<Node> childreen,bool hasCh )
+        /////    public void conv2Json(ref Node r, ref List<int> repeat, int ind, bool equal, int depth, ref string json)
+
+        //    {
+
+        //         //   Queue<int> e = new Queue<int>();
+        //        //List<int> repeat= new List<int>();
+        //        int i = 0;
+        //        bool enter = false;
+        //        //       depTemp = depth;          
+        //        //    depth = (r.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref r) : getDepth(ref root) - getDepth(ref r) + 1;
+        //        //  depth = getDepthNode(ref root, ref r);
+        //        //    r.getAllCh().Sort();
+        //        //if(r.getCountCh()<50)
+        //        //  for (int j = 0; j < r.getCountCh(); j++)
+        //        //      for (int v = 0; v < r.getCountCh(); v++)
+        //        //      {
+        //        //          if (j != v && r.getAllCh()[j].getName().Equals(r.getAllCh()[v].getName()) && !e.Contains(j))
+        //        //           //   e.AddLast(j);
+        //        //         // if (r.getAllCh().BinarySearch())
+        //        //          {
+        //        //      //        r.getAllCh().BinarySearch(r.getAllCh()[v]);
+        //        //              e.Enqueue(j);
+        //        //              repeat.Add(j);
+
+        //        //          }
+        //        //      }
+        //        //  if (r.getCountCh() < 50)
+        //        //  for (int j = 0; j < r.getCountCh(); j++)
+        //        Node m = r;
+        //        for (int v = 0; v < r.getCountCh(); v++)
+        //                {
+        //            // if (j != v && r.getAllCh()[j].getName().Equals(r.getAllCh()[v].getName()) && !e.Contains(j))
+        //            //   e.AddLast(j);
+        //            // if (r.getAllCh().BinarySearch())
+        //            // {
+        //            //        r.getAllCh().BinarySearch(r.getAllCh()[v]);
+        //           int j =  r.getAllCh().FindIndex(v+1,
+        //                delegate (Node n)
+        //                {
+        //                    return n.getName() == m.getAllCh()[v].getName();
+        //                });
+        //            if (j != v && j >= 0 && !e.Contains(j) && !e.Contains(v))
+        //            {
+        //                e.Enqueue(v);
+        //                repeat.Add(v);
+        //                e.Enqueue(j);
+        //                repeat.Add(j);
+
+        //            }
+        //          //  e.Dequeue();
+        //                   // }
+        //                }
+        //        /*  Node m = r;
+        //            List<Node> nodes;
+        //            for (int v = 0; v < r.getCountCh(); v++)
+        //                {
+        //               List<Node> nodes = r.getAllCh().FindAll(
+        //                delegate (Node n)
+        //                {
+        //                    return  n.getName() == m.getAllCh()[v].getName();
+
+        //                }
+        //                );
+        //            }*/
+        //        //for(int v =0;v<)
+        //        if (!repeat.Contains(ind) || ind == repeat[0])
+        //        { for (int t = 0; t < depth; t++)
+        //                json = json + "\t";
+        //            json = json +"\"" +$"{r.getName()}\": " + "\n";
+        //        }
+
+        //        if (e.Count != 0  &&repeat.Count>0 &&ind == repeat[0])
+        //        {
+
+        //            for (int t = 0; t < depth; t++)
+        //                json = json + "\t";
+        //            json = json + "["+"\n";
+        //        }
+        //        for (int t = 0; t < depth; t++)
+        //            json = json + "\t";
+        //        json = json + "{";
+        //        if (r.getOneLine()&&r.getAllAttr().Count==0)
+        //        {
+        //            json = json + "null"+"\n";
+        //        }
+        //        int cAttr = r.getAllAttr().Count;
+        //        while (cAttr != 0)
+        //        {
+
+        //            enter = true;
+
+        //            if (i % 2 == 0)
+
+        //            {
+        //                json = json + "\n";
+        //                for (int t = 0; t < depth; t++)
+        //                    json = json + "\t";
+        //                json = json + $"@{r.getOneAttr()}: ";
+        //            }
+        //            else
+        //                json = json + $"{r.getOneAttr()}";
+        //            i++;
+        //            cAttr--;
+        //        }
+
+        //        if (enter)
+        //        {
+        //            json = json + "\n";
+        //            for (int t = 0; t < depth; t++)
+        //                json = json + "\t";
+
+        //            json = json + "#text: " + $"\"{r.getValue() }\"" + "\n";
+        //            for (int t = 0; t < depth; t++)
+        //                json = json + "\t";
+
+        //        }
+        //        else
+        //        {
+        //            json = json + "\n";
+        //            for (int t = 0; t < depth; t++)
+        //                json = json + "\t";
+        //            json = json + $"\"{r.getValue() }\"" + "\n";
+        //            for (int t = 0; t < depth; t++)
+        //                json = json + "\t";
+
+        //        }
+        //        if (e.Count != 0  && e.Contains(ind))
+        //        {
+        //            if (repeat[repeat.Count - 1] != e.Peek())
+        //            {
+        //                json = json + "},\n";
+        //                e.Dequeue();
+        //              //  return;
+        //            }
+        //            else
+        //            {
+        //                json = json + "}\n";
+        //                for (int t = 0; t < depth; t++)
+        //                    json = json + "\t";
+        //                json = json + "]"+"\n";
+        //                e.Dequeue();
+
+        //            //     return;
+        //            }
+        //        }
+
+
+        //        if (r.getCountCh() == 0)
+        //        {
+        //            json = json + "}\n";
+        //          //  return;
+        //        }
+
+
+        //        //if (hasCh && childreen.Count > 0)
+        //        //{
+
+        //        //    // Node y = r.getAllCh()[e.Peek()];
+        //        //    //    conv2Json(ref x, ref e, e.Peek(), true);
+        //        //    Node x;
+        //        //    Node s;
+        //        //    bool what;
+        //        //    int inde = 0;
+        //        //    while(childreen.Count!=0)
+        //        //    {
+        //        //        //if (tempRe.Count >= 1)
+        //        //        //{
+        //        //        //    repeat = tempRe;
+        //        //        //    //e = temQu;
+        //        //        //}
+        //        //        //if (v != 0 && repeat.Contains(v))
+        //        //        //    continue;
+        //        //        //if ((e.Count != 0))
+        //        //        //{
+        //        //        //    x = r.getAllCh()[e.Peek()];
+
+        //        //        //    what = true;
+        //        //        //    inde = e.Peek();
+        //        //        //    if (!equal)
+        //        //        //    {
+        //        //        //        j--;
+        //        //        //    }
+        //        //        //}
+        //        //        //List<Node> l = new List<Node>();
+        //        //        //s = childreen[v];
+        //        //        //inde = v;
+        //        //        List<Node> l = new List<Node>();
+        //        //        s = childreen.Peek();
+        //        //        childreen.Dequeue();
+        //        //        inde++;
+        //        //        what = false;
+        //        //        conv2Json(ref s, ref e, ref repeat, inde, what, depth, ref json, ref childreen,hasCh);
+
+        //        //    }
+        //        //    return;
+        //        //}
+        //        for (int j = 0; j < r.getCountCh(); j++)
+        //        {
+        //            //if(r.getCountCh()<50)
+        //            if (tempRe.Count >= 1)
+        //            { repeat = tempRe;
+        //                e = temQu;
+        //            }
+        //            if (j != 0 && repeat.Contains(j))
+        //                continue;
+        //            // Node y = r.getAllCh()[e.Peek()];
+        //            //    conv2Json(ref x, ref e, e.Peek(), true);
+        //            Node x;
+        //            Node s;
+        //            bool what;
+        //            int inde;
+        //            //if ((e.Count != 0) && r.getCountCh() > 0)
+        //            //{
+        //            //    // depTemp = getDepth(ref root) - getDepth(ref x);
+
+        //            //    x = r.getAllCh()[j];
+        //            //    inde = j;
+        //            //    what = false;
+        //            //    //if (s.getCountCh() >= 1)
+        //            //    //{
+        //            //    //    tempRe = repeat;
+        //            //    //    repeat = new List<int>();
+
+        //            //    //}
+
+        //            //    //if (s.getCountCh() >= 1)
+        //            //    //    depTemp = depth;
+
+        //            //    // depTemp = getDepth(ref root) - getDepth(ref x);
+        //            //    //depth = (s.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
+
+        //            //    //conv2Json(ref s, ref e, ref repeat, inde, what, depth, ref json);
+        //            //}
+
+        //            //   else
+        //            if ((e.Count != 0))
+        //            {
+        //                x = r.getAllCh()[e.Peek()];
+
+        //                what = true;
+        //                inde = e.Peek();
+        //                if (!equal)
+        //                {
+        //                    j--;
+        //                }
+        //                if (x.getCountCh() > 0)
+        //                {
+        //                    hasCh = true;
+        //                    for(int c = 0;c< x.getCountCh();c++)
+        //                        childreen .Enqueue(x.getAllCh()[c]);
+        //                    //// Node y = r.getAllCh()[e.Peek()];
+        //                    ////    conv2Json(ref x, ref e, e.Peek(), true);
+
+        //                    //    if (x.getCountCh() >= 1)
+        //                    //        depTemp = depth;
+        //                    //    // depTemp = getDepth(ref root) - getDepth(ref x);
+        //                    //    depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x) : depTemp + 1;
+        //                    //    conv2Json(ref x, ref e, ref repeat, inde, what, depth, ref json, ref r);
+
+        //                    //    s = x.getAllCh()[0];
+        //                    //    inde = 0;
+        //                    //    what = false;
+        //                    //    conv2Json(ref s, ref e, ref repeat, inde, what, depth, ref json, ref r,hasCh);
+
+        //                }
+        //                else
+        //                {
+        //                    hasCh = false;
+        //                   childreen = new Queue<Node>();
+
+        //                }
+        //            }
+
+        //            else
+        //            {
+
+        //                x = r.getAllCh()[j];
+
+        //                if (x.getCountCh() >= 1)
+        //                {
+        //                    tempRe = repeat;
+        //                    repeat = new List<int>();
+        //                    //temQu = e;
+        //                    //e = new Queue<int>();
+
+        //                }
+
+        //                what = false;
+        //                inde = j;
+        //            }
+
+        //            /*                Node right;
+        //                            Node left;
+        //                            if (j+1 <r.getAllCh().Count)
+        //                                 right=  r.getAllCh()[j + 1];
+        //                            if (j - 1 > 0)
+        //                                left = r.getAllCh()[j - 1];
+        //               */                 //   if(getDepth(ref x)==0&& r.getCountCh() >= 1)
+        //                                  //       if (j - 1 > 0&& j + 1 < r.getAllCh().Count&&(getDepth(ref x)== getDepth(ref right) || getDepth(ref x) == getDepth(ref left)))
+        //            if (x.getCountCh() >= 1)
+        //            depTemp = depth ;
+
+        //            // depTemp = getDepth(ref root) - getDepth(ref x);
+        //            depth = (x.getCountCh() >= 1) ? getDepth(ref root) - getDepth(ref x)  :  depTemp + 1;
+        //            conv2Json(ref x, ref e, ref repeat, inde, what, depth, ref json, ref childreen,hasCh);
+        //            //    conv2Json(ref x,ref repeat,inde, what,depth,ref json);
+        //            if (hasCh && childreen.Count > 0)
+        //            {
+
+        //                // Node y = r.getAllCh()[e.Peek()];
+        //                //    conv2Json(ref x, ref e, e.Peek(), true);
+        //                //Node x;
+        //                //Node s;
+        //                //bool what;
+        //                 inde = 0;
+        //                while (childreen.Count != 0)
+        //                {
+        //                    //if (tempRe.Count >= 1)
+        //                    //{
+        //                    //    repeat = tempRe;
+        //                    //    //e = temQu;
+        //                    //}
+        //                    //if (v != 0 && repeat.Contains(v))
+        //                    //    continue;
+        //                    //if ((e.Count != 0))
+        //                    //{
+        //                    //    x = r.getAllCh()[e.Peek()];
+
+        //                    //    what = true;
+        //                    //    inde = e.Peek();
+        //                    //    if (!equal)
+        //                    //    {
+        //                    //        j--;
+        //                    //    }
+        //                    //}
+        //                    //List<Node> l = new List<Node>();
+        //                    //s = childreen[v];
+        //                    //inde = v;
+        //                    //       List<Node> l = new List<Node>();
+        //                //if(!e.Count==0)
+        //                    if (x.getCountCh() >= 1)
+        //                    {
+        //                        tempRe = repeat;
+        //                        repeat = new List<int>();
+        //                        temQu = e;
+        //                        e = new Queue<int>();
+
+        //                    }
+        //                    s = childreen.Peek();
+        //                    childreen.Dequeue();
+        //                    inde++;
+        //                    what = false;
+        //                    conv2Json(ref s, ref e, ref repeat, inde, what, depth, ref json, ref childreen, hasCh);
+
+        //                }
+        //                return;
+        //            }
+        //        }
+        //        json = json + "}\n";
+
+
+        //    } 
+        public string getJSON()
         {
             return json0;
         }
