@@ -1,5 +1,4 @@
-
-        public int Depth( ref Node n, ref Node s)
+ public int Depth( ref Node n, ref Node s)
         {
             if(n.getName()  ==  s.getName()) 
             {
@@ -43,14 +42,47 @@
           }
       }
       public void print(Node r ) 
-      { 
-          Space(r);
-          Console.Write("<"+r.getName()+" "+r.getOneAttr()+">");
+      {  if(isStartTag==false)//// print startinftags
+          {List<string> Tags=r.getStartingTags();
+           for(int i=0;i<r.getCountStartingTags();i++)
+           {
+            Console.WriteLine(Tags[i]);
+           }
+           isStarting==true;
+          }
+         Space(r);
+         if(r.getName()=="!--")//to print comment
+         {
+         Console.Write("<"+r.getName()+" "+r.getAllAttr().Dequeue());
+         }
+         else if(isOneLine()==true)/// to print <example />
+         {
+          Console.Write("<"+r.getName());
+          if(r.getCountAttr()!=0)
+            {
+                foreach(string s in r.getAllAttr())
+                {
+                    Console.Write(" "+s);
+                }
+            }
+            Console.Write(" />");
+
+         }
+         else
+         {
+            Console.Write("<"+r.getName());
+            if(r.getCountAttr()!=0)
+            {
+                foreach(string s in r.getAllAttr())
+                {
+                    Console.Write(" "+s+">");
+                }
+            }
           Console.Write(r.getValue());
           List<Node> child =r.getAllCh();
           if (r.getCountCh()!=0)
            {
-              Console.Write("\n");
+              Console.WriteLine("\n");
              for(int i=0;i<r.getCountCh();i++)
              {
               print(child[i]);
@@ -60,13 +92,22 @@
              Space(r);
           Console.Write("</"+r.getName()+">");
           Console.WriteLine("\n");
-       
+           }
         }
 
-      
       public void format()
         {
 			print(root);
 		}
 
-         
+         /* ////add fn.in node
+ public int getCountAttr(){
+           return attr.Count; 
+        }*/
+/* ///add fn. in node
+
+public int getCountStartingTags(){
+            return StartingTags.count;
+        }*/
+
+
