@@ -86,7 +86,7 @@ namespace XML_editor
             //    Queue<Node> l = new Queue<Node>();
 
             //      tree.conv2Json(ref root, ref er, ref r, -1, false, 0, ref json) ;
-            //int d = 0;
+            int d = 0;
             tree.conv2Json(ref root, -1, false,ref d, ref json);
             //richTextBox1.Text = tree.getJSON();
             richTextBox1.Text = json;
