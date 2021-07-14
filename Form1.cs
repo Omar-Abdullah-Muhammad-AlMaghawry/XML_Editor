@@ -236,7 +236,7 @@ namespace XML_editor
             }
         }
 
-        private List<short> compressLZW(string inputFile, string destination)
+        private void compressLZW(string inputFile)
         {
             List<string> table = new List<string>();
             for (int i = 0; i < 256; i++)
@@ -270,12 +270,22 @@ namespace XML_editor
 
             Predicate<string> finderP = delegate (string val) { return val == p; };
             output.Add((short)table.FindIndex(finderP));
-            return output;
+            //using (BinaryWriter binWriter = new BinaryWriter(File.Open(destination, FileMode.Create)))
+            //{
+            //    //write compressed binary to output file
+            //    for (int i = 0; i < output.Count; i++)
+            //    {
+            //        binWriter.Write(output[i]);
+            //    }
+            //}
 
-            using (BinaryWriter binWriter = new BinaryWriter(File.Open(destination, FileMode.Create)))
+            richTextBox1.Text = "";
+            for (int i = 0; i < output.Count; i++)
             {
-                //write compressed binary to output file
+                richTextBox1.Text += (byte)output[i];
             }
+
+            //return output;
         }
 
         private string decompressLZW(List<short> code)
@@ -317,8 +327,43 @@ namespace XML_editor
 
         private void button7_Click(object sender, EventArgs e)
         {
-            List<short> coded = compressLZW(richTextBox2.Text, "");
-            string message = decompressLZW(coded);
+            if(richTextBox2.Text.Length > 0)
+            {
+                compressLZW(richTextBox2.Text);
+                //string message = decompressLZW(coded);
+            }
+            else
+            {
+                richTextBox1.Text = "Please enter/browse file to be compressed";
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            BinaryReader binReader = new BinaryReader(File.Open("testfile.lzw", FileMode.Open)) ;
+            short test;
+            List<short> coded = new List<short>(); 
+            while (true)
+            {
+                try
+                {
+                    test = binReader.ReadInt16();
+                    coded.Add(test);
+                }
+                catch
+                {
+                    break;
+                }
+            }
+            if (richTextBox2.Text.Length > -1)
+            {
+                //List<short> coded = compressLZW(richTextBox2.Text, "testfile.lzw");
+                richTextBox1.Text = decompressLZW(coded);
+            }
+            else
+            {
+                richTextBox1.Text = "Please enter/browse file to be decompressed";
+            }
         }
     }
 }
