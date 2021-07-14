@@ -1,10 +1,23 @@
- 
-public void Mini(Node k)
+ public void Mini(Node k)
       {
         
-          if(k.getName()!="!--")
+          if(k.getName()!="!--")//remove all comments
           {
-             Console.Write( "<"+k.getName());
+            if(isOneLine==true)
+            {
+              Console.Write("<"+k.getName());
+          if(k.getCountAttr()!=0)
+            {
+                foreach(string s in k.getAllAttr())
+                {
+                    Console.Write(" "+s);
+                }
+            }
+            Console.Write(" />");  
+            }
+            else 
+            {
+                  Console.Write( "<"+k.getName());
          
 
           if(k.getCountAttr()!=0)
@@ -29,6 +42,11 @@ public void Mini(Node k)
 
           
           Console.Write("</"+k.getName()+">");
+            } 
+            
+
+
+           
           }
         
            
