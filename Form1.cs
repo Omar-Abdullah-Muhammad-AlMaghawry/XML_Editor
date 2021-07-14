@@ -75,6 +75,7 @@ namespace XML_editor
             Node n = new Node("span", ref q, ref l, "llllllllllllllllll");
             Tree x = new Tree(ref n);
             string json = "";
+            
             bool hasCh = (n.getCountCh() > 0);
             // x.conv2Json(ref n, ref er, ref r, -1, false, 0, ref json,hasCh);
             //   x.conv2Json(ref n, -1, false, 0, ref json);
@@ -85,7 +86,7 @@ namespace XML_editor
             //    Queue<Node> l = new Queue<Node>();
 
             //      tree.conv2Json(ref root, ref er, ref r, -1, false, 0, ref json) ;
-            int d = 0;
+            //int d = 0;
             tree.conv2Json(ref root, -1, false,ref d, ref json);
             //richTextBox1.Text = tree.getJSON();
             richTextBox1.Text = json;
@@ -133,7 +134,16 @@ namespace XML_editor
                            List<int> r = new List<int>();
                            tree.conv2Json(ref root, ref er, r, -1, false, 0);
                            richTextBox1.Text = tree.getJSON();*/
-
+                    string input = richTextBox2.Text;
+                    string path0 = @"mmm.lzw";
+                    List<short> output = encoding(input);
+                    using (BinaryWriter binWriter = new BinaryWriter(File.Open(path0, FileMode.Create)))
+                    {
+                        for (int i = 0; i < output.Count; i++)
+                        {
+                            binWriter.Write(output[i]);
+                        }
+                    }
                 }
             }
         }
@@ -141,7 +151,35 @@ namespace XML_editor
         {
 
         }
+        public List<short> encoding(string input)
+        {
+            List<string> table = new List<string>();
+            List<short> encFile = new List<short>();
+            string p = "";
+            string c = input.Substring(0,1);
+            for (int i =0;i<input.Length;i++ )
+            {              
+                if(!table.Contains(input.Substring(i,1)))
+                    table.Add(input.Substring(i, 1));
+            }
+            for (int i = 0; i <= input.Length; i++)
+            {
+               
+                c = input.Substring(0, 1);
+                if (!table.Contains(p+c))
+                {
+                    encFile.Add(short.Parse(table.IndexOf(p).ToString()));
+                    table.Add(p+c);
+                    p = c;
+                }
+                else
+                {
+                    p = p + c; 
 
+                }
+            }
+            return encFile;
+        }
         public bool errordetection(string mystring)
         {
             richTextBox1.Text = "";
