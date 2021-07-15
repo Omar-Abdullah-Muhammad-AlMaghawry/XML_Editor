@@ -21,24 +21,24 @@ namespace XML_editor
 
         private void richTextBox2_TextChanged(object sender, EventArgs e)
         {
-            if (!errordetection(richTextBox2.Text))
-            {
-                Node root = new Node();
-                Tree tree = new Tree(ref root, richTextBox2.Text);
-                button2.Enabled = true;
-                button3.Enabled = true;
-                button6.Enabled = true;
-                button7.Enabled = true;
-                button4.Enabled = true;
-            }
-            else
-            {
-                button2.Enabled = false;
-                button3.Enabled = false;
-                button6.Enabled = false;
-                button7.Enabled = false;
-                button4.Enabled = false;
-            }
+            //if (!errordetection(richTextBox2.Text))
+            //{
+            //    Node root = new Node();
+            //    Tree tree = new Tree(ref root, richTextBox2.Text);
+            //    button2.Enabled = true;
+            //    button3.Enabled = true;
+            //    button6.Enabled = true;
+            //    button7.Enabled = true;
+            //    button4.Enabled = true;
+            //}
+            //else
+            //{
+            //    button2.Enabled = false;
+            //    button3.Enabled = false;
+            //    button6.Enabled = false;
+            //    button7.Enabled = false;
+            //    button4.Enabled = false;
+            //}
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -83,10 +83,12 @@ namespace XML_editor
                 Tree tree = new Tree(ref root, richTextBox2.Text);
                 tree.format();
                 richTextBox1.Text = "";
+                string message = "";
                 for (int i = 0; i < tree.toBePrinted.Count; i++)
                 {
-                    richTextBox1.Text += tree.toBePrinted[i];
+                    message += tree.toBePrinted[i];
                 }
+                richTextBox1.Text = message;
             }
             else
             {
@@ -108,10 +110,13 @@ namespace XML_editor
                 Tree tree = new Tree(ref root, richTextBox2.Text);
                 tree.Minifying();
                 richTextBox1.Text = "";
+                string message = "";
                 for (int i = 0; i < tree.toBePrinted.Count; i++)
                 {
-                    richTextBox1.Text += tree.toBePrinted[i];
+                    //richTextBox1.Text += tree.toBePrinted[i];
+                    message += tree.toBePrinted[i];
                 }
+                richTextBox1.Text = message;
             }
             else
             {
@@ -270,21 +275,23 @@ namespace XML_editor
 
             Predicate<string> finderP = delegate (string val) { return val == p; };
             output.Add((short)table.FindIndex(finderP));
-            //using (BinaryWriter binWriter = new BinaryWriter(File.Open(destination, FileMode.Create)))
-            //{
-            //    //write compressed binary to output file
-            //    for (int i = 0; i < output.Count; i++)
-            //    {
-            //        binWriter.Write(output[i]);
-            //    }
-            //}
-
-            richTextBox1.Text = "";
-            for (int i = 0; i < output.Count; i++)
+            using (BinaryWriter binWriter = new BinaryWriter(File.Open("testfile.lzw", FileMode.Create)))
             {
-                richTextBox1.Text += (byte)output[i];
+                //write compressed binary to output file
+                for (int i = 0; i < output.Count; i++)
+                {
+                    binWriter.Write(output[i]);
+                }
             }
 
+            richTextBox1.Text = "";
+            string message = "";
+            for (int i = 0; i < output.Count; i++)
+            {
+                //richTextBox1.Text += (char)output[i];
+                message += (char)output[i];
+            }
+            richTextBox1.Text = message;
             //return output;
         }
 
@@ -340,21 +347,47 @@ namespace XML_editor
 
         private void button8_Click(object sender, EventArgs e)
         {
-            BinaryReader binReader = new BinaryReader(File.Open("testfile.lzw", FileMode.Open)) ;
             short test;
             List<short> coded = new List<short>(); 
-            while (true)
+            using (BinaryReader binReader = new BinaryReader(File.Open("testfile.lzw", FileMode.Open)))
             {
-                try
+                while (true)
                 {
-                    test = binReader.ReadInt16();
-                    coded.Add(test);
-                }
-                catch
-                {
-                    break;
+                    try
+                    {
+                        test = binReader.ReadInt16();
+                        coded.Add(test);
+                    }
+                    catch
+                    {
+                        break;
+                    }
                 }
             }
+
+            richTextBox2.Text = "";
+            short character;
+            string message = "";
+            using (BinaryReader binReader2 = new BinaryReader(File.Open("testfile.lzw", FileMode.Open)))
+            {
+                while (true)
+                {
+                    try
+                    {
+                        character = binReader2.ReadInt16();
+                        //coded.Add(test);
+                        //richTextBox2.Text += (char)character;
+                        message += (char)character;
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                }
+            }
+
+            richTextBox2.Text = message;
+
             if (richTextBox2.Text.Length > -1)
             {
                 //List<short> coded = compressLZW(richTextBox2.Text, "testfile.lzw");
