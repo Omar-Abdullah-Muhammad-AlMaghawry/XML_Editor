@@ -464,8 +464,9 @@ namespace XML_editor
 
             if (r.getCountCh() == 0)
             {
-                if(((!r.getIsFirst() || !r.getIsFirstFirst()) && r.getRepeated() )|| ((r.getIsLast())&&r.getRepeated())|| (r.getIsLastLast())) 
-                    json = json + "}\n";
+                // if(((!r.getIsFirst() || !r.getIsFirstFirst()) && r.getRepeated() )|| ((r.getIsLast())&&r.getRepeated())|| (r.getIsLastLast()))
+               if( ((r.getIsLast())&&r.getRepeated())|| (r.getIsLastLast()))
+                json = json + "}\n";
                 else if (r.getIsFirst()||r.getIsFirstFirst()||!r.getRepeated())
                     json = json + "},\n";
                  
@@ -581,7 +582,7 @@ namespace XML_editor
             }
             if (r.getRepeated())
             {
-                if (!r.getIsLast()  &&!father.getAllCh().Contains(r))
+                if (!r.getIsLast())
                 {
                     for (int t = 0; t < depth; t++)
                         json = json + "\t";
