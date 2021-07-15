@@ -19,6 +19,8 @@ namespace XML_editor
         private int whoNext;
         private bool isLastLast;
         private bool isFirstFirst;
+        private bool isComment = false;
+
 
 
 
@@ -219,7 +221,17 @@ namespace XML_editor
         {
             return value;
         }
-        
-
+        public int getCountAttr()
+        {
+            return attr.Count;
+        }
+        public bool getCommentFlag()
+        {
+            return isComment;
+        }
+        public void setCommentFlag(bool val)
+        {
+            isComment = val;
+        }
     }
 }

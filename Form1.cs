@@ -17,6 +17,8 @@ namespace XML_editor
     {
         private Node root;
         private Tree tree;
+        private List<short> output;
+        private bool isCompres = false;
         public Form1()
         {
             InitializeComponent();
@@ -24,14 +26,33 @@ namespace XML_editor
 
         private void richTextBox2_TextChanged(object sender, EventArgs e)
         {
-            if (!errordetection(richTextBox2.Text))
-            {
                 Node root = new Node();
                 Tree tree = new Tree(ref root, richTextBox2.Text);
-            }
-        }
+            if (button2.Enabled == false && errordetection(richTextBox2.Text))
+            {
 
-        private void label1_Click(object sender, EventArgs e)
+                button2.Enabled = false;
+                button3.Enabled = false;
+                button6.Enabled = false;
+                button7.Enabled = false;
+                button4.Enabled = false;
+                richTextBox1.Text += "\n";
+                richTextBox1.Text += "Can't do any functions if there are errors";
+
+            }
+            else
+            {
+                richTextBox1.Text = "";
+                button2.Enabled = true;
+                button3.Enabled = true;
+                button6.Enabled = true;
+                button7.Enabled = true;
+                button4.Enabled = true;
+            }
+
+            }
+
+            private void label1_Click(object sender, EventArgs e)
         {
 
         }
@@ -48,53 +69,104 @@ namespace XML_editor
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if (errordetection(richTextBox2.Text))
+            {
 
-            // LinkedList<int> er = new LinkedList<int>();
-            Queue<int> er = new Queue<int>();
-            List<int> r = new List<int>();
-            Queue<string> q = new Queue<string>();
-            q.Enqueue("ref");
-            q.Enqueue("hhtttp **");
-            Queue<string> q1 = new Queue<string>();
-            q1.Enqueue("ref");
-            q1.Enqueue("hhtttp **");
+                button2.Enabled = false;
+                button3.Enabled = false;
+                button6.Enabled = false;
+                button7.Enabled = false;
+                button4.Enabled = false;
+                richTextBox1.Text += "\n";
+                richTextBox1.Text += "Can't do any functions if there are errors";
 
-            List<Node> l = new List<Node>();
+            }
+            else
+            {
+                Node root = new Node();
+                Tree tree = new Tree(ref root, richTextBox2.Text);
+                button2.Enabled = true;
+                button3.Enabled = true;
+                button6.Enabled = true;
+                button7.Enabled = true;
+                button4.Enabled = true;
 
-            l.Add(new Node("n1", "gvflgklflkg"));
-            l.Add(new Node("n2", "ooooooooooooooo"));
-            List<Node> l1 = new List<Node>();
-            l1.Add(new Node("n10000", "mmmmmmmmmmmmmm"));
-            Node v = new Node("n1", ref q1, ref l1, "dddddddvvvvvvvvvvvvvv");
-            l.Add(v);
-            l.Add(new Node("n3", "ddddddddddddddd"));
-            l.Add(new Node("n4", "mmmmmmmmmmmmmm"));
 
-            l.Add(new Node("n1", "mmmmmmmmmmmmmmxxxxxxxxxxxxxxxxxx"));
+                // LinkedList<int> er = new LinkedList<int>();
+                Queue<int> er = new Queue<int>();
+                List<int> r = new List<int>();
+                Queue<string> q = new Queue<string>();
+                //q.Enqueue("ref");
+                //q.Enqueue("hhtttp **");
+                //Queue<string> q1 = new Queue<string>();
+                //q1.Enqueue("ref");
+                //q1.Enqueue("hhtttp **");
 
-            Node n = new Node("span", ref q, ref l, "llllllllllllllllll");
-            Tree x = new Tree(ref n);
-            string json = "";
-            
-            bool hasCh = (n.getCountCh() > 0);
-            // x.conv2Json(ref n, ref er, ref r, -1, false, 0, ref json,hasCh);
-            //   x.conv2Json(ref n, -1, false, 0, ref json);
-            // richTextBox1.Text = x.getJSON();
-            //  string json = richTextBox1.Text;
-            //   Node x = null;
-            //List<Node> l = new List<Node>();
-            //    Queue<Node> l = new Queue<Node>();
+                //List<Node> l = new List<Node>();
 
-            //      tree.conv2Json(ref root, ref er, ref r, -1, false, 0, ref json) ;
-            int d = 0;
-            tree.conv2Json(ref root, -1, false,ref d, ref json);
-            //richTextBox1.Text = tree.getJSON();
-            richTextBox1.Text = json;
+                //l.Add(new Node("n1", "gvflgklflkg"));
+                //l.Add(new Node("n2", "ooooooooooooooo"));
+                //List<Node> l1 = new List<Node>();
+                //l1.Add(new Node("n10000", "mmmmmmmmmmmmmm"));
+                //Node v = new Node("n1", ref q1, ref l1, "dddddddvvvvvvvvvvvvvv");
+                //l.Add(v);
+                //l.Add(new Node("n3", "ddddddddddddddd"));
+                //l.Add(new Node("n4", "mmmmmmmmmmmmmm"));
+
+                //l.Add(new Node("n1", "mmmmmmmmmmmmmmxxxxxxxxxxxxxxxxxx"));
+
+                //Node n = new Node("span", ref q, ref l, "llllllllllllllllll");
+                //Tree x = new Tree(ref n);
+
+                //    bool hasCh = (n.getCountCh() > 0);
+                // x.conv2Json(ref n, ref er, ref r, -1, false, 0, ref json,hasCh);
+                //   x.conv2Json(ref n, -1, false, 0, ref json);
+                // richTextBox1.Text = x.getJSON();
+                //  string json = richTextBox1.Text;
+                //   Node x = null;
+                //List<Node> l = new List<Node>();
+                //    Queue<Node> l = new Queue<Node>();
+
+                //      tree.conv2Json(ref root, ref er, ref r, -1, false, 0, ref json) ;
+                string json = "";
+                int d = 0;
+                Node father = null;
+                tree.conv2Json(ref root, -1, false, ref d, ref json, ref father);
+                //richTextBox1.Text = tree.getJSON();
+                richTextBox1.Text = json;
+            }
         }
-
         private void button3_Click(object sender, EventArgs e)
         {
+            if (errordetection(richTextBox2.Text))
+            {
 
+
+                button2.Enabled = false;
+                button3.Enabled = false;
+                button6.Enabled = false;
+                button7.Enabled = false;
+                button4.Enabled = false;
+                richTextBox1.Text += "\n";
+                richTextBox1.Text += "Can't do any functions if there are errors";
+            }
+            else
+            {
+                Node root = new Node();
+                Tree tree = new Tree(ref root, richTextBox2.Text);
+                button2.Enabled = true;
+                button3.Enabled = true;
+                button6.Enabled = true;
+                button7.Enabled = true;
+                button4.Enabled = true;
+
+                tree.format();
+                richTextBox1.Text = "";
+                for (int i = 0; i < tree.toBePrinted.Count; i++)
+                {
+                    richTextBox1.Text += tree.toBePrinted[i];
+                }
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -104,7 +176,36 @@ namespace XML_editor
 
         private void button6_Click(object sender, EventArgs e)
         {
+            if (errordetection(richTextBox2.Text))
+            {
+                
+                button2.Enabled = false;
+                button3.Enabled = false;
+                button6.Enabled = false;
+                button7.Enabled = false;
+                button4.Enabled = false;
+                richTextBox1.Text += "\n";
+                richTextBox1.Text += "Can't do any functions if there are errors";
+            }
+            else
+            {
+                Node root = new Node();
+                Tree tree = new Tree(ref root, richTextBox2.Text);
+                button2.Enabled = true;
+                button3.Enabled = true;
+                button6.Enabled = true;
+                button7.Enabled = true;
+                button4.Enabled = true;
 
+            
+            tree.Minifying();
+                richTextBox1.Text = "";
+                for (int i = 0; i < tree.toBePrinted.Count; i++)
+                {
+                    richTextBox1.Text += tree.toBePrinted[i];
+                }
+            }
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -134,16 +235,35 @@ namespace XML_editor
                            List<int> r = new List<int>();
                            tree.conv2Json(ref root, ref er, r, -1, false, 0);
                            richTextBox1.Text = tree.getJSON();*/
-                    string input = richTextBox2.Text;
-                    string path0 = @"mmm.lzw";
-                    List<short> output = encoding(input);
-                    using (BinaryWriter binWriter = new BinaryWriter(File.Open(path0, FileMode.Create)))
-                    {
-                        for (int i = 0; i < output.Count; i++)
-                        {
-                            binWriter.Write(output[i]);
-                        }
-                    }
+                    //string input = richTextBox2.Text;
+                    //string path0 = @"mmm.lzw";
+                    //List<short> output = encoding(input);
+                    //using (BinaryWriter binWriter = new BinaryWriter(File.Open(path0, FileMode.Create)))
+                    //{
+                    //    for (int i = 0; i < output.Count; i++)
+                    //    {
+                    //        binWriter.Write(output[i]);
+                    //    }
+                    //}
+                    //richTextBox1.Text = "";
+                    //for (int i = 0; i < output.Count; i++)
+                    //{
+                    //    richTextBox1.Text += (byte)output[i];
+                    //}
+                    //List<short> output0 = new List<short>();
+                    //using (BinaryReader binReader = new BinaryReader(File.Open(path0, FileMode.Open)))
+                    //{
+
+                    //    while (true)
+                    //        try {
+                    //            output0.Add(binReader.ReadInt16());
+
+                    //        }
+                    //        catch
+                    //        {
+                    //            break;
+                    //        }
+                    //}
                 }
             }
         }
@@ -151,30 +271,34 @@ namespace XML_editor
         {
 
         }
-        public List<short> encoding(string input)
+        public List<short> encoding_O(string input)
         {
             List<string> table = new List<string>();
             List<short> encFile = new List<short>();
             string p = "";
-            string c = input.Substring(0,1);
-            for (int i =0;i<input.Length;i++ )
-            {              
-                if(!table.Contains(input.Substring(i,1)))
-                    table.Add(input.Substring(i, 1));
+            string c;
+     //       if (input[0].ToString()!=null)
+            c = input[0].ToString();
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (!table.Contains(input.Substring(i, 1)))
+                    table.Add(input[i].ToString());
             }
             for (int i = 0; i <= input.Length; i++)
             {
-               
-                c = input.Substring(0, 1);
-                if (!table.Contains(p+c))
+                if (i != input.Length)
+                    c = input[i].ToString();
+                else
+                    c = "";
+                if (!table.Contains(p + c))
                 {
                     encFile.Add(short.Parse(table.IndexOf(p).ToString()));
-                    table.Add(p+c);
+                    table.Add(p + c);
                     p = c;
                 }
                 else
                 {
-                    p = p + c; 
+                    p = p + c;
 
                 }
             }
@@ -182,6 +306,7 @@ namespace XML_editor
         }
         public bool errordetection(string mystring)
         {
+            isCompres = false;
             richTextBox1.Text = "";
             string storee = "";
             string checkk = "";
@@ -262,8 +387,276 @@ namespace XML_editor
             //Console.Read();
         }
 
-       
+
+        private void compressLZW(string inputFile)
+        {
+            List<string> table = new List<string>();
+            for (int i = 0; i < 256; i++)
+            {
+                table.Add(((char)i).ToString());
+            }
+
+            int code = 256;
+            string p = "", c = "";
+            p += inputFile[0];
+            List<short> output = new List<short>();
+
+            for (int i = 0; i < inputFile.Length; i++)
+            {
+                if (i != inputFile.Length - 1) c += inputFile[i + 1];
+
+                Predicate<string> finderPC = delegate (string val) { return val == (p + c); };
+                Predicate<string> finderP1 = delegate (string val) { return val == p; };
+                if (table.FindIndex(finderPC) < table.Count && table.FindIndex(finderPC) > 0)
+                {
+                    p = p + c;
+                }
+                else
+                {
+                    output.Add((short)table.FindIndex(finderP1));
+                    table.Add(p + c);
+                    p = c;
+                }
+                c = "";
+            }
+
+            Predicate<string> finderP = delegate (string val) { return val == p; };
+            output.Add((short)table.FindIndex(finderP));
+            using (BinaryWriter binWriter = new BinaryWriter(File.Open("test.lzw", FileMode.Create)))
+            {
+                //write compressed binary to output file
+                for (int i = 0; i < output.Count; i++)
+                {
+                    binWriter.Write(output[i]);
+                }
+            }
+
+            richTextBox1.Text = "";
+            for (int i = 0; i < output.Count; i++)
+            {
+                richTextBox1.Text += (byte)output[i];
+            }
+
+            //return output;
+        }
+
+        private string decompressLZW(List<short> code)
+        {
+            List<string> table = new List<string>();
+            for (int i = 0; i < 256; i++)
+            {
+                table.Add(((char)i).ToString());
+            }
+
+            string output = "";
+            int old = code[0], n = 0;
+            string s = table[old];
+            output += s;
+            string c = "";
+            c += s[0];
+            int count = 256;
+            for (int i = 0; i < code.Count; i++)
+            {
+                if (i < code.Count - 1) n = code[i + 1]; else break;
+                if (n == table.Count)
+                {
+                    s = table[old];
+                    s = s + c;
+                }
+                else
+                {
+                    s = table[n];
+                }
+                output += s;
+                c = "";
+                c += s[0];
+                table.Add(table[old] + c);
+                count++;
+                old = n;
+            }
+            return output;
+        }
+        private string decompressLZW_A(List<short> code)
+        {
+            List<string> table = new List<string>();
+            string input = richTextBox2.Text;
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (!table.Contains(input.Substring(i, 1)))
+                    table.Add(input[i].ToString());
+            }
+            string output = "";
+            int old = code[0], n = 0;
+            string s = table[old];
+            output += s;
+            string c = "";
+            c += s[0];
+            int count = table.Count;
+            for (int i = 0; i < code.Count; i++)
+            {
+                if (i < code.Count - 1) n = code[i + 1]; else break;
+                if (n == table.Count)
+                {
+                    s = table[old];
+                    s = s + c;
+                }
+                else
+                {
+                    s = table[n];
+                }
+                output += s;
+                c = "";
+                c += s[0];
+                table.Add(table[old] + c);
+                count++;
+                old = n;
+            }
+            return output;
+        }
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (errordetection(richTextBox2.Text))
+            {
+                button2.Enabled = false;
+                button3.Enabled = false;
+                button6.Enabled = false;
+                button7.Enabled = false;
+                button4.Enabled = false;
+                richTextBox1.Text += "\n";
+                richTextBox1.Text += "Can't do any functions if there are errors";
+
+            }
+            else
+            {
+                Node root = new Node();
+                Tree tree = new Tree(ref root, richTextBox2.Text);
+                button2.Enabled = true;
+                button3.Enabled = true;
+                button6.Enabled = true;
+                button7.Enabled = true;
+                button4.Enabled = true;
+
+                if (richTextBox2.Text.Length > 0)
+                {
+                    // compressLZW(richTextBox2.Text);
+                    //string message = decompressLZW(coded);
+                    output = encoding_O(richTextBox2.Text);
+                    isCompres = true;
+
+                    richTextBox1.Text = "";
+                    for (int i = 0; i < output.Count; i++)
+                    {
+                        richTextBox1.Text += (byte)output[i];
+                    }
+                }
+                else
+                {
+                    richTextBox1.Text = "Please enter/browse file to be compressed";
+                }
+            }
+        }
+        private void button8_Click(object sender, EventArgs e)
+        {
+
+            string path = "";
+            OpenFileDialog fdlg = new OpenFileDialog();
+            fdlg.Title = "Choose the lzw File";
+            // fdlg.InitialDirectory = @"d:\College\3rd Comp. and Sys\2nd Terms\Data Structure\XML_Editor_Project\data";
+            //      fdlg.InitialDirectory = @"c:\";
+            fdlg.Filter = "All files (*.*)|*.*|XML files (*.xml*)|*.xml*";
+            fdlg.FilterIndex = 2;
+            fdlg.RestoreDirectory = true;
+            if (fdlg.ShowDialog() == DialogResult.OK)
+            {
+                path = fdlg.FileName;
+
+               
+                short test;
+               // byte test0;
+                List<short> coded = new List<short>();
+                //BinaryReader binReader0 = new BinaryReader(File.Open(path, FileMode.Open));
+                //while (true)
+                //{
+                //    try
+                //    {
+                //        //  test = binReader.ReadInt16();
+                //        test0 = binReader0.ReadByte();
+                //        richTextBox2.Text += (char)test0;
+                //        // coded.Add(test);
+                //    }
+                //    catch
+                //    {
+                //        break;
+                //    }
+                //}
+                BinaryReader binReader1 = new BinaryReader(File.Open(path, FileMode.Open));
+                while (true)
+                {
+                    try
+                    {
+                          test = binReader1.ReadInt16();
+                 //       test0 = binReader.ReadByte();
+                   //     richTextBox2.Text += (char)test0;
+                         coded.Add(test);
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                }
+                if (richTextBox2.Text.Length > -1)
+                    {
+                    richTextBox1.Text = decompressLZW_A(coded);
+                        //List<short> coded = compressLZW(richTextBox2.Text, "testfile.lzw");
+                        // richTextBox1.Text = decode(coded);
+                }
+                    else
+                    {
+                        richTextBox1.Text = "Please enter/browse file to be decompressed";
+                    }
+                }
+            }
+        private void button5_Click(object sender, EventArgs e)
+        {
+            string path = "";
+            SaveFileDialog fdlg = new SaveFileDialog();
+            fdlg.Title = "Choose The Saving Location and The Name.extension";
+             fdlg.InitialDirectory = @"d:\College\3rd Comp. and Sys\2nd Terms\Data Structure\XML_Editor_Project\data";
+          //  fdlg.InitialDirectory = @"c:\";
+            fdlg.Filter = "All files (*.*)|*.*|XML files (*.xml*)|*.xml*|JSON files(*.json*)|*.json*";
+            fdlg.FilterIndex = 2;
+            fdlg.RestoreDirectory = true;
+            if (fdlg.ShowDialog() == DialogResult.OK)
+            {
+               
+                    path = fdlg.FileName;
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+                if (isCompres)
+                {
+                    using (BinaryWriter binWriter = new BinaryWriter(File.Open(path, FileMode.Create)))
+                    {
+                        //write compressed binary to output file
+                        for (int i = 0; i < output.Count; i++)
+                        {
+                            binWriter.Write(output[i]);
+                        }
+                    }
+
+                }
+                else {
+                    using (FileStream result = File.Create(path))
+                    {
+                        byte[] data = new UTF8Encoding(true).GetBytes(richTextBox1.Text);
+                        result.Write(data, 0, data.Length);
+
+
+                    }
+                }
+              
+            } 
+        } 
     } 
-    
-      
 }
