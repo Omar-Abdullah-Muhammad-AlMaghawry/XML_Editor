@@ -451,7 +451,7 @@ namespace XML_editor
                         for (int t = 0; t < depth; t++)
                             json = json + "\t";
                        
-                        if((r == father.getAllCh()[father.getCountCh() - 1]) || !r.getIsLastLast())
+                        if(!r.getIsLastLast())
                             json = json + "]," + "\n";
                         else json = json + "]" + "\n";
                         // e.Dequeue();
@@ -465,10 +465,14 @@ namespace XML_editor
             if (r.getCountCh() == 0)
             {
                 // if(((!r.getIsFirst() || !r.getIsFirstFirst()) && r.getRepeated() )|| ((r.getIsLast())&&r.getRepeated())|| (r.getIsLastLast()))
-               if( ((r==father.getAllCh()[father.getCountCh()-1])||(r.getIsLast())&&r.getRepeated())|| (r.getIsLastLast()))
+               if( (r==father.getAllCh()[father.getCountCh()-1])||((r.getIsLast())&&r.getRepeated()) || (r.getIsLastLast()))
                 json = json + "}\n";
                 else if (r.getIsFirst()||r.getIsFirstFirst()||!r.getRepeated())
                     json = json + "},\n";
+                else
+                {
+                    json = json + "},\n";
+                }
                  
                 return;
             }
