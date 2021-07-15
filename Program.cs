@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 namespace XML_editor
 {
+
     static class Program
     {
         /// <summary>
@@ -14,6 +15,7 @@ namespace XML_editor
         [STAThread]
         static void Main()
         {
+
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

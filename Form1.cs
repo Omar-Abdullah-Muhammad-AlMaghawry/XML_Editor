@@ -162,10 +162,12 @@ namespace XML_editor
 
                 tree.format();
                 richTextBox1.Text = "";
+                string outp = "";
                 for (int i = 0; i < tree.toBePrinted.Count; i++)
                 {
-                    richTextBox1.Text += tree.toBePrinted[i];
+                 outp += tree.toBePrinted[i];
                 }
+                richTextBox1.Text = outp;
             }
         }
 
@@ -199,11 +201,13 @@ namespace XML_editor
 
             
             tree.Minifying();
+                string outp = "";
                 richTextBox1.Text = "";
                 for (int i = 0; i < tree.toBePrinted.Count; i++)
                 {
-                    richTextBox1.Text += tree.toBePrinted[i];
+                    outp += tree.toBePrinted[i];
                 }
+                richTextBox1.Text = outp;
             }
             
         }
@@ -542,12 +546,15 @@ namespace XML_editor
                     //string message = decompressLZW(coded);
                     output = encoding_O(richTextBox2.Text);
                     isCompres = true;
-
+                    string outp = "";
                     richTextBox1.Text = "";
                     for (int i = 0; i < output.Count; i++)
                     {
-                        richTextBox1.Text += (byte)output[i];
+                        
+                        outp += (byte)output[i];
+                        
                     }
+                    richTextBox1.Text = outp;
                 }
                 else
                 {
@@ -564,7 +571,7 @@ namespace XML_editor
             // fdlg.InitialDirectory = @"d:\College\3rd Comp. and Sys\2nd Terms\Data Structure\XML_Editor_Project\data";
             //      fdlg.InitialDirectory = @"c:\";
             fdlg.Filter = "All files (*.*)|*.*|XML files (*.xml*)|*.xml*";
-            fdlg.FilterIndex = 2;
+            fdlg.FilterIndex = 1;
             fdlg.RestoreDirectory = true;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
@@ -574,36 +581,56 @@ namespace XML_editor
                 short test;
                // byte test0;
                 List<short> coded = new List<short>();
-                //BinaryReader binReader0 = new BinaryReader(File.Open(path, FileMode.Open));
-                //while (true)
-                //{
-                //    try
-                //    {
-                //        //  test = binReader.ReadInt16();
-                //        test0 = binReader0.ReadByte();
-                //        richTextBox2.Text += (char)test0;
-                //        // coded.Add(test);
-                //    }
-                //    catch
-                //    {
-                //        break;
-                //    }
-                //}
-                BinaryReader binReader1 = new BinaryReader(File.Open(path, FileMode.Open));
-                while (true)
+                ////BinaryReader binReader0 = new BinaryReader(File.Open(path, FileMode.Open));
+                ////while (true)
+                ////{
+                ////    try
+                ////    {
+                ////        //  test = binReader.ReadInt16();
+                ////        test0 = binReader0.ReadByte();
+                ////        richTextBox2.Text += (char)test0;
+                ////        // coded.Add(test);
+                ////    }
+                ////    catch
+                ////    {
+                ////        break;
+                ////    }
+                ////}
+                ////using (BinaryReader binReader = new BinaryReader(File.Open(path, FileMode.Open)))
+                ////{
+                ////    while (true)
+                ////    {
+                ////        try
+                ////        {
+                ////            test = binReader.ReadInt16();
+                ////            coded.Add(test);
+                ////        }
+                ////        catch
+                ////        {
+                ////            break;
+                ////        }
+                ////    }
+                ////}
+                using (BinaryReader binReader1 = new BinaryReader(File.Open(path, FileMode.Open)))
                 {
-                    try
+                    while (true)
                     {
-                          test = binReader1.ReadInt16();
-                 //       test0 = binReader.ReadByte();
-                   //     richTextBox2.Text += (char)test0;
-                         coded.Add(test);
-                    }
-                    catch
-                    {
-                        break;
+                        try
+                        {
+                            test = binReader1.ReadInt16();
+                            //       test0 = binReader.ReadByte();
+                            //     richTextBox2.Text += (char)test0;
+                            coded.Add(test);
+
+                        }
+                        catch
+                        {
+                            binReader1.Close();
+                            break;
+                        }
                     }
                 }
+                
                 if (richTextBox2.Text.Length > -1)
                     {
                     richTextBox1.Text = decompressLZW_A(coded);
@@ -626,7 +653,7 @@ namespace XML_editor
              fdlg.InitialDirectory = @"d:\College\3rd Comp. and Sys\2nd Terms\Data Structure\XML_Editor_Project\data";
           //  fdlg.InitialDirectory = @"c:\";
             fdlg.Filter = "All files (*.*)|*.*|XML files (*.xml*)|*.xml*|JSON files(*.json*)|*.json*";
-            fdlg.FilterIndex = 2;
+            fdlg.FilterIndex = 1;
             fdlg.RestoreDirectory = true;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {

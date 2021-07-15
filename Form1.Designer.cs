@@ -170,7 +170,7 @@ namespace XML_editor
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(147, 29);
             this.button8.TabIndex = 13;
-            this.button8.Text = "Decompress";
+            this.button8.Text = "Decompress...";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
@@ -193,7 +193,7 @@ namespace XML_editor
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.richTextBox2);
             this.Name = "Form1";
-            this.Text = "-";
+            this.Text = "XML Editor";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -203,7 +203,6 @@ namespace XML_editor
         #endregion
 
         private System.Windows.Forms.RichTextBox richTextBox2;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
@@ -214,6 +213,7 @@ namespace XML_editor
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
+        public System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 

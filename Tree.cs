@@ -21,7 +21,9 @@ namespace XML_editor
 
         int depTemp;
         private string prolog = "";
+         public Form1 MyForm;
 
+    
         public Tree(ref Node n)
         {
             root = n;
@@ -400,8 +402,8 @@ namespace XML_editor
                 else
                 {
 
-                    json = json + "\n";
-                    for (int t = 0; t < depth; t++)
+                  //  json = json + "\n";
+                    for (int t = 0; t < depth-1; t++)
                         json = json + "\t";
                     json = json + $"__comment: \"{r.getName().Substring(3)}";
                     string comment = r.getOneAttr();
