@@ -405,7 +405,7 @@ namespace XML_editor
                   //  json = json + "\n";
                     for (int t = 0; t < depth-1; t++)
                         json = json + "\t";
-                    json = json + $"__comment: \"{r.getName().Substring(3)}";
+                    json = json + $"\"_comment\": \"{r.getName().Substring(3)}";
                     string comment = r.getOneAttr();
                     int indexC = (comment.Length - 4);
                     json = json +$"{comment.Substring(0,indexC)}"+ "\"";
