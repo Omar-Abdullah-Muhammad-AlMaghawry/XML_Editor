@@ -248,6 +248,7 @@ namespace XML_editor
 
             Queue<int> ef = new Queue<int>();
             Queue<int> el = new Queue<int>();
+            bool isAttr = r.getIsAttr();
 
             List<int> repeat1= new List<int>();
             int i = 0;
@@ -326,7 +327,9 @@ namespace XML_editor
             }
             if (r == root)
             {
-                json = json + "{" + "\n";
+                if(r.getCountCh()>0||isAttr)
+                    if (!r.getCommentFlag())
+                        json = json + "{" + "\n";
             }
             if (!r.getRepeated())
             {
@@ -337,20 +340,36 @@ namespace XML_editor
                         json = json + "\t";
                     else if(father != null)
                         json = json + "\t";
-                    json = json + "\"" + $"{r.getName()}\": " + "\n";
+                    json = json + "\"" + $"{r.getName()}\": ";
+
+
+                    if (r.getCountCh() > 0 || isAttr)
+                        if (!r.getCommentFlag())
+                            json = json + "\n"; ////////////////////////
                 }
             }
             
             if (r.getIsFirst())
             {
-
-                for (int t = 0; t < depth; t++)
-                    json = json + "\t";
+                if (r.getCountCh() > 0 || isAttr)
+                    if (!r.getCommentFlag())
+                        for (int t = 0; t < depth; t++)
+                        json = json + "\t";
                 json = json + "[" + "\n";
+                if (!(!r.getRepeated() && !r.getIsFirst() || isAttr || r.getCountCh() > 0))
+                    if (!r.getCommentFlag())
+                        for (int t = 0; t < depth; t++)
+                    json = json + "\t";
+
             }
-            for (int t = 0; t < depth; t++)
-                json = json + "\t";
-            json = json + "{";
+            if (r.getRepeated()||r.getCountCh() > 0 || isAttr)
+                //      if ((!r.getRepeated() && !r.getIsFirst() || isAttr || r.getCountCh() > 0))
+                if (!r.getCommentFlag())
+                    for (int t = 0; t < depth; t++)
+               json = json + "\t";
+            if (r.getCountCh() > 0 || isAttr)
+                if(!r.getCommentFlag())
+                json = json + "{";
             if (r.getOneLine() && r.getAllAttr().Count == 0)
             {
                 json = json + "null" + "\n";
@@ -363,7 +382,7 @@ namespace XML_editor
                 {
                     enter = true;
 
-                    if (i % 2 == 0)
+                    if (i % 2 == 0) 
 
                     {
 
@@ -398,18 +417,22 @@ namespace XML_editor
                 if (r.getValue() != "")
                 {
                     json = json + "\n";
+
                     for (int t = 0; t < depth; t++)
                         json = json + "\t";
 
-                    json = json + "#text: " + $"\"{r.getValue() }\"" + "\n";
+                    json = json + "#text: " + $"\"{r.getValue() }\"";
+                        json = json + "\n";
                     for (int t = 0; t < depth; t++)
                         json = json + "\t";
                 }
                 else
                 {
-                    json = json + "\n";
-                    for (int t = 0; t < depth; t++)
-                        json = json + "\t";
+
+                    
+                        json = json + "\n";
+                        for (int t = 0; t < depth; t++)
+                            json = json + "\t";
                 }
 
             }
@@ -417,14 +440,22 @@ namespace XML_editor
             {
                 if (!r.getCommentFlag())
                 {
+                    if ((r.getCountCh() > 0 || isAttr)||r.getRepeated())
+                        if (!r.getCommentFlag())
+                        {
+                        json = json + "\n";
+                            for (int t = 0; t < depth; t++)
+                            json = json + "\t";
+                    }
+                    json = json + $"\"{r.getValue() }\"";
+                }
+                if ((r.getCountCh() > 0 || isAttr))
+                    if (!r.getCommentFlag())
+                    {
                     json = json + "\n";
                     for (int t = 0; t < depth; t++)
                         json = json + "\t";
-                    json = json + $"\"{r.getValue() }\"";
                 }
-                json = json + "\n";
-                for (int t = 0; t < depth; t++)
-                        json = json + "\t";
                 
 
             }
@@ -437,7 +468,12 @@ namespace XML_editor
                 {
                     //if (!r.getIsLast() )
                     //{
-                    json = json + "},\n";
+                    if (r.getCountCh() > 0 || isAttr)
+                        if (!r.getCommentFlag())
+                            json = json + "}";
+                      json = json + ",";
+                        json = json + "\n";
+
                     // e.Dequeue();
                     if (!(r.getCountCh() > 0))
                         return;
@@ -447,7 +483,10 @@ namespace XML_editor
                 {
                     if (r.getIsLast())
                     {
-                        json = json + "}\n";
+                        if (r.getCountCh() > 0 || isAttr)
+                            if (!r.getCommentFlag())
+                                json = json + "}";
+                            json = json + "\n";
                         for (int t = 0; t < depth; t++)
                             json = json + "\t";
                        
@@ -465,15 +504,37 @@ namespace XML_editor
             if (r.getCountCh() == 0)
             {
                 // if(((!r.getIsFirst() || !r.getIsFirstFirst()) && r.getRepeated() )|| ((r.getIsLast())&&r.getRepeated())|| (r.getIsLastLast()))
-               if( (r==father.getAllCh()[father.getCountCh()-1])||((r.getIsLast())&&r.getRepeated()) || (r.getIsLastLast()))
-                json = json + "}\n";
-                else if (r.getIsFirst()||r.getIsFirstFirst()||!r.getRepeated())
-                    json = json + "},\n";
+                if ((r == father.getAllCh()[father.getCountCh() - 1]) || ((r.getIsLast()) && r.getRepeated()) || (r.getIsLastLast()))
+                {
+
+                    if (r.getCountCh() > 0 || isAttr)
+                        if (!r.getCommentFlag())
+                            json = json + "}";
+
+                    json = json + "\n";
+                }
+                else if (r.getIsFirst() || r.getIsFirstFirst() || !r.getRepeated())
+                {
+                    if (r.getCountCh() > 0 || isAttr)
+                        if (!r.getCommentFlag())
+                            json = json + "}";
+
+                    json = json + ",";
+                   // if (r.getCountCh() > 0 || isAttr)
+                    if (!r.getRepeated()&&!r.getIsFirst()||isAttr)
+                            json = json + "\n";
+                }
                 else
                 {
-                    json = json + "},\n";
+                    if (r.getCountCh() > 0 || isAttr)
+                        if (!r.getCommentFlag())
+                            json = json + "}";
+
+                    json = json + ",";
+                    if (r.getCountCh() > 0 || isAttr)
+                            json = json + "\n";
                 }
-                 
+
                 return;
             }
             
@@ -590,7 +651,11 @@ namespace XML_editor
                 {
                     for (int t = 0; t < depth; t++)
                         json = json + "\t";
-                    json = json + "},\n";
+                    if (r.getCountCh() > 0 || isAttr)
+                        if (!r.getCommentFlag())
+                            json = json + "}";
+
+                    json = json + ",\n";
                     // e.Dequeue();
                     if (!(r.getCountCh() > 0))
                         return;
@@ -599,7 +664,11 @@ namespace XML_editor
                 {
                     if (r.getIsLast())
                     {
-                        json = json + "}\n";
+                        if (r.getCountCh() > 0 || isAttr)
+                            if (!r.getCommentFlag())
+                                json = json + "}";
+
+                        json = json + "\n";
                         for (int t = 0; t < depth; t++)
                             json = json + "\t";
                         //////////json = json + "]" + "\n";
@@ -614,8 +683,12 @@ namespace XML_editor
                     }
                 }
             }
-            if (r==root)
-                json = json + "}\n";
+            if (r == root)
+            { if (r.getCountCh() > 0 || isAttr)
+                    if (!r.getCommentFlag())
+                        json = json + "}";
+
+                json = json + "\n"; }
 
 
         }

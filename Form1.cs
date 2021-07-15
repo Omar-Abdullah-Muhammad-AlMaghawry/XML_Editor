@@ -72,7 +72,7 @@ namespace XML_editor
             if (errordetection(richTextBox2.Text))
             {
 
-                button2.Enabled = false;
+                //button2.Enabled = false;
                 button3.Enabled = false;
                 button6.Enabled = false;
                 button7.Enabled = false;
@@ -142,7 +142,7 @@ namespace XML_editor
             {
 
 
-                button2.Enabled = false;
+                //button2.Enabled = false;
                 button3.Enabled = false;
                 button6.Enabled = false;
                 button7.Enabled = false;
@@ -179,7 +179,7 @@ namespace XML_editor
             if (errordetection(richTextBox2.Text))
             {
                 
-                button2.Enabled = false;
+                //button2.Enabled = false;
                 button3.Enabled = false;
                 button6.Enabled = false;
                 button7.Enabled = false;
@@ -517,7 +517,7 @@ namespace XML_editor
         {
             if (errordetection(richTextBox2.Text))
             {
-                button2.Enabled = false;
+                //button2.Enabled = false;
                 button3.Enabled = false;
                 button6.Enabled = false;
                 button7.Enabled = false;
@@ -607,6 +607,8 @@ namespace XML_editor
                 if (richTextBox2.Text.Length > -1)
                     {
                     richTextBox1.Text = decompressLZW_A(coded);
+                    if (richTextBox1.Text.Substring(richTextBox1.Text.Length - 2) != ">")
+                        richTextBox1.Text += ">";
                         //List<short> coded = compressLZW(richTextBox2.Text, "testfile.lzw");
                         // richTextBox1.Text = decode(coded);
                 }

@@ -19,6 +19,7 @@ namespace XML_editor
         private int whoNext;
         private bool isLastLast;
         private bool isFirstFirst;
+        private bool isAttr;
         private bool isComment = false;
 
 
@@ -40,6 +41,7 @@ namespace XML_editor
             isFirstFirst = false;
             isTaken = false;
             whoNext = -1;
+            isAttr = false;
         }
         public Node(string n)
         {
@@ -54,6 +56,7 @@ namespace XML_editor
             isLastLast = false;
             isFirstFirst = false;
             isTaken = false;
+            isAttr = false;
             whoNext = -1;
         }
         public Node(string n, string v)
@@ -69,6 +72,7 @@ namespace XML_editor
             isLastLast = false;
             isFirstFirst = false;
             isTaken = false;
+            isAttr = false;
             whoNext = -1;
         }
         public Node(string n,ref Queue<string> att,ref List<Node> ch, string v)
@@ -84,6 +88,7 @@ namespace XML_editor
             isLastLast = false;
             isFirstFirst = false;
             isTaken = false;
+            isAttr = false;
             whoNext = -1;
         }
         public void setOneLine(bool inp)
@@ -102,6 +107,11 @@ namespace XML_editor
         public bool getIsLastLast()
         {
             return isLastLast;
+
+        }
+        public bool getIsAttr()
+        {
+            return (attr.Count>0);
 
         }
 
